@@ -1,10 +1,13 @@
+import { requireProUser } from "@/lib/auth";
 import Navbar from "@/components/dashboard/Navbar";
 import Footer from "@/components/dashboard/Footer";
 import { ExamsList } from "@/components/dashboard/ExamsList";
 import { AddExamDialog } from "@/components/dashboard/AddExamDialog";
 import { GraduationCap } from "lucide-react";
 
-export default function ExamsPage() {
+export default async function ExamsPage() {
+  await requireProUser();
+
   return (
     <div>
       <Navbar />

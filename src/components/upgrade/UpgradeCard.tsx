@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { createCheckoutSession } from "@/lib/actions/stripe";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { PRICING } from "@/lib/constants";
 import {
   Card,
   CardContent,
@@ -32,7 +34,9 @@ export function UpgradeCard() {
       window.location.href = checkoutUrl;
     } catch (error) {
       console.error("Failed to create checkout session:", error);
-      alert("Failed to start checkout. Please try again.");
+      toast.error("Failed to start checkout", {
+        description: "Please try again or contact support",
+      });
       setIsLoading(false);
     }
   };
@@ -65,7 +69,7 @@ export function UpgradeCard() {
         {/* Pricing */}
         <div className="pt-6 border-t">
           <div className="text-center">
-            <div className="text-4xl font-bold text-foreground">$6.99</div>
+            <div className="text-4xl font-bold text-foreground">{PRICING.MONTHLY_PRICE}</div>
             <div className="text-sm text-muted-foreground mt-1">
               per month, billed monthly
             </div>

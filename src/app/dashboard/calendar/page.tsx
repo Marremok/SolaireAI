@@ -1,11 +1,11 @@
-import { currentUser } from '@clerk/nextjs/server';
+import { requireProUser } from '@/lib/auth';
 import Navbar from '@/components/dashboard/Navbar';
 import Footer from '@/components/dashboard/Footer';
 import CalendarView from '@/components/dashboard/CalendarView';
 import { Calendar } from 'lucide-react';
 
 export default async function CalendarPage() {
-  const user = await currentUser();
+  await requireProUser();
 
   return (
     <div>

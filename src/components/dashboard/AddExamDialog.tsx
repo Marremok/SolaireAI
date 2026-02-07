@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CalendarIcon, Plus, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -126,10 +127,17 @@ export function AddExamDialog({ trigger }: AddExamDialogProps) {
         studyMethods: data.studyMethods,
       });
 
+      toast.success("Exam created successfully", {
+        description: "Your study schedule is being generated...",
+      });
+
       reset();
       setOpen(false);
     } catch (error) {
       console.error("Failed to create exam:", error);
+      toast.error("Failed to create exam", {
+        description: error instanceof Error ? error.message : "Please try again",
+      });
     }
   };
 

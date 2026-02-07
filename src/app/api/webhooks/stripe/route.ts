@@ -117,7 +117,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const subscriptionId = subscription.id;
   const status = subscription.status;
   const priceId = subscription.items.data[0]?.price.id;
-  const currentPeriodEnd = new Date(subscription.current_period_end * 1000);
+  const currentPeriodEnd = new Date((subscription as any).current_period_end * 1000);
 
   console.log(`[Subscription Update] ${subscriptionId} -> status: ${status}`);
 

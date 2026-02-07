@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { getUserSettings, updateUserSettings } from "@/lib/actions/settings";
 import { regenerateSchedule } from "@/lib/actions/exam";
 import type { UserSettingsInput } from "@/lib/schemas/settings";
@@ -66,6 +67,12 @@ export function useUpdateSettings() {
           (exam) => exam.scheduleStatus === "GENERATED"
         );
 
+        if (generatedExams.length > 0) {
+          toast.info("Regenerating schedules", {
+            description: `Updating ${generatedExams.length} exam schedule(s) with new settings...`,
+          });
+        }
+
         // Regenerate all schedules in parallel
         await Promise.all(
           generatedExams.map(async (exam) => {
@@ -81,6 +88,7 @@ export function useUpdateSettings() {
               });
             } catch (error) {
               console.error(`Failed to regenerate schedule for exam ${exam.id}:`, error);
+              toast.error(`Failed to update schedule for ${exam.title}`);
             }
           })
         );

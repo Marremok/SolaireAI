@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { SignUpButton } from "@clerk/nextjs"
 import { motion } from "framer-motion"
 import { Sparkles, CheckCircle2, Zap, Trophy, Timer, Brain, Notebook } from "lucide-react"
-import UpgradeButton from "./UpgradeButton"
+import { PRICING } from "@/lib/constants"
 
 export default function SingleTierPricing() {
   const features = [
@@ -95,11 +95,11 @@ export default function SingleTierPricing() {
               <div className="relative flex flex-col items-center justify-center p-8 rounded-4xl bg-linear-to-b from-primary/5 to-transparent border border-primary/10">
                 <div className="text-center mb-8">
                   <div className="flex items-baseline justify-center gap-1 mb-2">
-                    <span className="text-6xl font-black tracking-tight text-foreground">$5</span>
+                    <span className="text-6xl font-black tracking-tight text-foreground">{PRICING.MONTHLY_PRICE}</span>
                     <span className="text-muted-foreground text-xl">/mo</span>
                   </div>
                   <p className="text-sm font-bold text-primary uppercase tracking-widest">
-                    Free for your first 7 days
+                    Free for your first {PRICING.TRIAL_DAYS} days
                   </p>
                 </div>
 

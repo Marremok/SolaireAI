@@ -11,9 +11,11 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 import { useExams, useDeleteExam, filterUpcomingExams, filterCompletedExams } from "@/hooks/use-exams";
 import { AddExamDialog } from "./AddExamDialog";
+import { ScheduleStatusBadge } from "./ScheduleStatusBadge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -108,7 +110,7 @@ function ExamCard({ exam, colorClass, onDelete, isDeleting }: ExamCardProps) {
       </div>
 
       {/* Status Badge */}
-      <div className="mb-4">
+      <div className="mb-4 flex flex-wrap gap-2">
         <span
           className={cn(
             "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider",
@@ -119,6 +121,9 @@ function ExamCard({ exam, colorClass, onDelete, isDeleting }: ExamCardProps) {
         >
           {exam.status}
         </span>
+        {(exam.scheduleStatus === "GENERATING" || exam.scheduleStatus === "FAILED") && (
+          <ScheduleStatusBadge scheduleStatus={exam.scheduleStatus} />
+        )}
       </div>
 
       {/* Data Rows */}
@@ -315,7 +320,16 @@ export function ExamsList() {
                 key={exam.id}
                 exam={exam}
                 colorClass={getExamColor(index)}
-                onDelete={() => deleteExam.mutate(exam.id)}
+                onDelete={() => {
+                  toast.promise(
+                    deleteExam.mutateAsync(exam.id),
+                    {
+                      loading: "Deleting exam...",
+                      success: "Exam deleted successfully",
+                      error: "Failed to delete exam",
+                    }
+                  );
+                }}
                 isDeleting={deleteExam.isPending}
               />
             ))}
