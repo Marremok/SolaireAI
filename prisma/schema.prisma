@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id            Int     @id @default(autoincrement())
+  clerkId       String  @unique
+  email         String  @unique
+  firstName     String
+  lastName      String
+  phone         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Study capacity settings
+  maxHoursPerWeek                 Float    @default(15.0)
+
+  // Rest & recovery settings
+  restDays      String[]  @default([])
+
+  // Stripe subscription fields
+  stripeCustomerId        String?   @unique    // Stripe customer ID (created on first checkout)
+  stripeSubscriptionId    String?   @unique    // Current active subscription ID
+  stripePriceId           String?              // Price ID of current subscription
+  stripeCurrentPeriodEnd  DateTime?            // When current billing period ends
+  subscriptionStatus      String?              // Stripe status: active, incomplete, past_due, canceled, etc.
+  plan                    UserPlan @default(FREE) // Computed from subscriptionStatus
+
+  exams         Exam[]
+  studySessions StudySession[]
+
+  @@map("users")
+}
+
+enum UserPlan {
+  FREE
+  PRO
+}
+
+
+
+model Exam {
+  id            Int       @id
+  userId        Int
+  title         String
+  subject       String?
+  studyMethods  Json
+  description   String?
+  date          DateTime
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  hoursPerWeek  Float?
+  preferredSessionLengthMinutes Int @default(60)
+  status        ExamStatus  @default(UPCOMING)
+
+  user          User        @relation(fields: [userId], references: [id])
+  studySessions StudySession[]
+  scheduleStatus ScheduleStatus @default(NONE)
+
+  @@map("exams")
+}
+
+enum ExamStatus {
+  UPCOMING
+  COMPLETED
+}
+
+enum ScheduleStatus {
+  NONE
+  GENERATING
+  GENERATED
+  FAILED
+}
+
+enum SessionStatus {
+  PLANNED
+  COMPLETED
+  SKIPPED
+}
+
+model StudySession {
+  id        Int           @id @default(autoincrement())
+  examId    Int
+  userId   Int
+  date      DateTime
+  duration  Int
+  method    String
+  topic     String?
+  status    SessionStatus @default(PLANNED)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  exam      Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)
+  user      User          @relation(fields: [userId], references: [id])
+
+  @@map("study_sessions")
+}
