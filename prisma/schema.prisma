@@ -103,7 +103,7 @@ model StudySession {
   updatedAt DateTime      @updatedAt
 
   exam      Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)
-  user      User          @relation(fields: [userId], references: [id])
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("study_sessions")
 }
