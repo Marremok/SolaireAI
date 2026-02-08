@@ -2,6 +2,7 @@ import { requireProUser } from "@/lib/auth";
 import Navbar from "@/components/dashboard/Navbar";
 import Footer from "@/components/dashboard/Footer";
 import SettingsForm from "@/components/dashboard/settings/SettingsForm";
+import { UserProfile } from "@clerk/nextjs";
 
 /**
  * Settings Page - PROTECTED by PRO subscription
@@ -20,6 +21,12 @@ export default async function SettingsPage() {
           </p>
         </div>
         <SettingsForm />
+
+        {/* Billing — Clerk UserProfile includes subscription management when Billing is enabled */}
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold mb-4">Account & Billing</h2>
+          <UserProfile />
+        </div>
       </div>
       <Footer />
     </div>

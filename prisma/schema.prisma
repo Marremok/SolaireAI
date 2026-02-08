@@ -30,23 +30,10 @@ model User {
   // Rest & recovery settings
   restDays      String[]  @default([])
 
-  // Stripe subscription fields
-  stripeCustomerId        String?   @unique    // Stripe customer ID (created on first checkout)
-  stripeSubscriptionId    String?   @unique    // Current active subscription ID
-  stripePriceId           String?              // Price ID of current subscription
-  stripeCurrentPeriodEnd  DateTime?            // When current billing period ends
-  subscriptionStatus      String?              // Stripe status: active, incomplete, past_due, canceled, etc.
-  plan                    UserPlan @default(FREE) // Computed from subscriptionStatus
-
   exams         Exam[]
   studySessions StudySession[]
 
   @@map("users")
-}
-
-enum UserPlan {
-  FREE
-  PRO
 }
 
 

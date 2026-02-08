@@ -82,13 +82,7 @@ export const UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   maxHoursPerWeek: 'maxHoursPerWeek',
-  restDays: 'restDays',
-  stripeCustomerId: 'stripeCustomerId',
-  stripeSubscriptionId: 'stripeSubscriptionId',
-  stripePriceId: 'stripePriceId',
-  stripeCurrentPeriodEnd: 'stripeCurrentPeriodEnd',
-  subscriptionStatus: 'subscriptionStatus',
-  plan: 'plan'
+  restDays: 'restDays'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

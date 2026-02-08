@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npx prisma migrate dev:*)",
       "Bash(npx next build:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "WebFetch(domain:clerk.com)",
+      "WebFetch(domain:dev.to)",
+      "Bash(npm ls:*)"
     ]
   }
 }

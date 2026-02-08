@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "./prisma";
 import { redirect } from "next/navigation";
 
@@ -16,22 +16,15 @@ export type DbUser = {
   updatedAt: Date;
   maxHoursPerWeek: number;
   restDays: string[];
-  // REMOVED: preferredSessionLengthMinutes (moved to Exam model)
-  // REMOVED: studyIntensity (no longer needed - pure math)
-  stripeCustomerId: string | null;
-  stripeSubscriptionId: string | null;
-  stripePriceId: string | null;
-  stripeCurrentPeriodEnd: Date | null;
-  subscriptionStatus: string | null;
-  plan: "FREE" | "PRO";
 };
 
 /**
- * Check if a user has an active PRO subscription
- * A user is PRO if subscriptionStatus is "active" or "trialing"
+ * Check if the current user has an active PRO subscription
+ * Uses Clerk Billing — reads from session token, no DB query needed
  */
-export function isProUser(user: DbUser): boolean {
-  return user.subscriptionStatus === "active" || user.subscriptionStatus === "trialing";
+export async function isProUser(): Promise<boolean> {
+  const { has } = await auth();
+  return has({ plan: "pro" });
 }
 
 /**
@@ -39,11 +32,11 @@ export function isProUser(user: DbUser): boolean {
  * Returns null if not authenticated
  */
 export async function getCurrentDbUser(): Promise<DbUser | null> {
-  const clerkUser = await currentUser();
-  if (!clerkUser) return null;
+  const { userId } = await auth();
+  if (!userId) return null;
 
   const dbUser = await prisma.user.findUnique({
-    where: { clerkId: clerkUser.id },
+    where: { clerkId: userId },
   });
 
   return dbUser as DbUser | null;
@@ -57,15 +50,18 @@ export async function getCurrentDbUser(): Promise<DbUser | null> {
  * - All API routes (/api/schedule, etc.)
  * - All dashboard page components
  *
+ * Uses Clerk Billing has({ plan: "pro" }) for subscription check,
+ * then fetches DB user for app data (maxHoursPerWeek, restDays, etc.)
+ *
  * @param shouldRedirect - If true, redirects to /upgrade on failure. If false, throws error.
  * @returns The authenticated PRO user
  * @throws Error if user is not authenticated or not PRO
  */
 export async function requireProUser(shouldRedirect = true): Promise<DbUser> {
-  const user = await getCurrentDbUser();
+  const { has, userId } = await auth();
 
   // Not authenticated at all
-  if (!user) {
+  if (!userId) {
     if (shouldRedirect) {
       redirect("/sign-in");
     }
@@ -73,17 +69,26 @@ export async function requireProUser(shouldRedirect = true): Promise<DbUser> {
   }
 
   // Authenticated but not PRO
-  if (!isProUser(user)) {
+  if (!has({ plan: "pro" })) {
     if (shouldRedirect) {
       redirect("/upgrade");
     }
-    throw new Error(
-      "PRO subscription required. Current status: " +
-        (user.subscriptionStatus || "none")
-    );
+    throw new Error("PRO subscription required");
   }
 
-  return user;
+  // Fetch DB user for app data
+  const dbUser = await prisma.user.findUnique({
+    where: { clerkId: userId },
+  });
+
+  if (!dbUser) {
+    if (shouldRedirect) {
+      redirect("/sign-in");
+    }
+    throw new Error("User not found in database");
+  }
+
+  return dbUser as DbUser;
 }
 
 /**
@@ -91,13 +96,21 @@ export async function requireProUser(shouldRedirect = true): Promise<DbUser> {
  * Use this for routes that need auth but not subscription
  */
 export async function requireAuth(): Promise<DbUser> {
-  const user = await getCurrentDbUser();
+  const { userId } = await auth();
 
-  if (!user) {
+  if (!userId) {
     redirect("/sign-in");
   }
 
-  return user;
+  const dbUser = await prisma.user.findUnique({
+    where: { clerkId: userId },
+  });
+
+  if (!dbUser) {
+    redirect("/sign-in");
+  }
+
+  return dbUser as DbUser;
 }
 
 /**
@@ -107,11 +120,15 @@ export async function requireAuth(): Promise<DbUser> {
  * @returns DbUser if PRO, null otherwise
  */
 export async function getProUserOrNull(): Promise<DbUser | null> {
-  const user = await getCurrentDbUser();
+  const { has, userId } = await auth();
 
-  if (!user || !isProUser(user)) {
+  if (!userId || !has({ plan: "pro" })) {
     return null;
   }
 
-  return user;
+  const dbUser = await prisma.user.findUnique({
+    where: { clerkId: userId },
+  });
+
+  return dbUser as DbUser | null;
 }

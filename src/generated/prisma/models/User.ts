@@ -46,12 +46,6 @@ export type UserMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   maxHoursPerWeek: number | null
-  stripeCustomerId: string | null
-  stripeSubscriptionId: string | null
-  stripePriceId: string | null
-  stripeCurrentPeriodEnd: Date | null
-  subscriptionStatus: string | null
-  plan: $Enums.UserPlan | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -64,12 +58,6 @@ export type UserMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   maxHoursPerWeek: number | null
-  stripeCustomerId: string | null
-  stripeSubscriptionId: string | null
-  stripePriceId: string | null
-  stripeCurrentPeriodEnd: Date | null
-  subscriptionStatus: string | null
-  plan: $Enums.UserPlan | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -83,12 +71,6 @@ export type UserCountAggregateOutputType = {
   updatedAt: number
   maxHoursPerWeek: number
   restDays: number
-  stripeCustomerId: number
-  stripeSubscriptionId: number
-  stripePriceId: number
-  stripeCurrentPeriodEnd: number
-  subscriptionStatus: number
-  plan: number
   _all: number
 }
 
@@ -113,12 +95,6 @@ export type UserMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   maxHoursPerWeek?: true
-  stripeCustomerId?: true
-  stripeSubscriptionId?: true
-  stripePriceId?: true
-  stripeCurrentPeriodEnd?: true
-  subscriptionStatus?: true
-  plan?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -131,12 +107,6 @@ export type UserMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   maxHoursPerWeek?: true
-  stripeCustomerId?: true
-  stripeSubscriptionId?: true
-  stripePriceId?: true
-  stripeCurrentPeriodEnd?: true
-  subscriptionStatus?: true
-  plan?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -150,12 +120,6 @@ export type UserCountAggregateInputType = {
   updatedAt?: true
   maxHoursPerWeek?: true
   restDays?: true
-  stripeCustomerId?: true
-  stripeSubscriptionId?: true
-  stripePriceId?: true
-  stripeCurrentPeriodEnd?: true
-  subscriptionStatus?: true
-  plan?: true
   _all?: true
 }
 
@@ -256,12 +220,6 @@ export type UserGroupByOutputType = {
   updatedAt: Date
   maxHoursPerWeek: number
   restDays: string[]
-  stripeCustomerId: string | null
-  stripeSubscriptionId: string | null
-  stripePriceId: string | null
-  stripeCurrentPeriodEnd: Date | null
-  subscriptionStatus: string | null
-  plan: $Enums.UserPlan
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -298,12 +256,6 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   maxHoursPerWeek?: Prisma.FloatFilter<"User"> | number
   restDays?: Prisma.StringNullableListFilter<"User">
-  stripeCustomerId?: Prisma.StringNullableFilter<"User"> | string | null
-  stripeSubscriptionId?: Prisma.StringNullableFilter<"User"> | string | null
-  stripePriceId?: Prisma.StringNullableFilter<"User"> | string | null
-  stripeCurrentPeriodEnd?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  subscriptionStatus?: Prisma.StringNullableFilter<"User"> | string | null
-  plan?: Prisma.EnumUserPlanFilter<"User"> | $Enums.UserPlan
   exams?: Prisma.ExamListRelationFilter
   studySessions?: Prisma.StudySessionListRelationFilter
 }
@@ -319,12 +271,6 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
   restDays?: Prisma.SortOrder
-  stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  stripeSubscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  stripePriceId?: Prisma.SortOrderInput | Prisma.SortOrder
-  stripeCurrentPeriodEnd?: Prisma.SortOrderInput | Prisma.SortOrder
-  subscriptionStatus?: Prisma.SortOrderInput | Prisma.SortOrder
-  plan?: Prisma.SortOrder
   exams?: Prisma.ExamOrderByRelationAggregateInput
   studySessions?: Prisma.StudySessionOrderByRelationAggregateInput
 }
@@ -333,8 +279,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   clerkId?: string
   email?: string
-  stripeCustomerId?: string
-  stripeSubscriptionId?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -345,13 +289,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   maxHoursPerWeek?: Prisma.FloatFilter<"User"> | number
   restDays?: Prisma.StringNullableListFilter<"User">
-  stripePriceId?: Prisma.StringNullableFilter<"User"> | string | null
-  stripeCurrentPeriodEnd?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  subscriptionStatus?: Prisma.StringNullableFilter<"User"> | string | null
-  plan?: Prisma.EnumUserPlanFilter<"User"> | $Enums.UserPlan
   exams?: Prisma.ExamListRelationFilter
   studySessions?: Prisma.StudySessionListRelationFilter
-}, "id" | "clerkId" | "email" | "stripeCustomerId" | "stripeSubscriptionId">
+}, "id" | "clerkId" | "email">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -364,12 +304,6 @@ export type UserOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
   restDays?: Prisma.SortOrder
-  stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  stripeSubscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  stripePriceId?: Prisma.SortOrderInput | Prisma.SortOrder
-  stripeCurrentPeriodEnd?: Prisma.SortOrderInput | Prisma.SortOrder
-  subscriptionStatus?: Prisma.SortOrderInput | Prisma.SortOrder
-  plan?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -391,12 +325,6 @@ export type UserScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   maxHoursPerWeek?: Prisma.FloatWithAggregatesFilter<"User"> | number
   restDays?: Prisma.StringNullableListFilter<"User">
-  stripeCustomerId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  stripeSubscriptionId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  stripePriceId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  stripeCurrentPeriodEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  subscriptionStatus?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  plan?: Prisma.EnumUserPlanWithAggregatesFilter<"User"> | $Enums.UserPlan
 }
 
 export type UserCreateInput = {
@@ -409,12 +337,6 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   maxHoursPerWeek?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
-  stripeCustomerId?: string | null
-  stripeSubscriptionId?: string | null
-  stripePriceId?: string | null
-  stripeCurrentPeriodEnd?: Date | string | null
-  subscriptionStatus?: string | null
-  plan?: $Enums.UserPlan
   exams?: Prisma.ExamCreateNestedManyWithoutUserInput
   studySessions?: Prisma.StudySessionCreateNestedManyWithoutUserInput
 }
@@ -430,12 +352,6 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   maxHoursPerWeek?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
-  stripeCustomerId?: string | null
-  stripeSubscriptionId?: string | null
-  stripePriceId?: string | null
-  stripeCurrentPeriodEnd?: Date | string | null
-  subscriptionStatus?: string | null
-  plan?: $Enums.UserPlan
   exams?: Prisma.ExamUncheckedCreateNestedManyWithoutUserInput
   studySessions?: Prisma.StudySessionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -450,12 +366,6 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  plan?: Prisma.EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
   exams?: Prisma.ExamUpdateManyWithoutUserNestedInput
   studySessions?: Prisma.StudySessionUpdateManyWithoutUserNestedInput
 }
@@ -471,12 +381,6 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  plan?: Prisma.EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
   exams?: Prisma.ExamUncheckedUpdateManyWithoutUserNestedInput
   studySessions?: Prisma.StudySessionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -492,12 +396,6 @@ export type UserCreateManyInput = {
   updatedAt?: Date | string
   maxHoursPerWeek?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
-  stripeCustomerId?: string | null
-  stripeSubscriptionId?: string | null
-  stripePriceId?: string | null
-  stripeCurrentPeriodEnd?: Date | string | null
-  subscriptionStatus?: string | null
-  plan?: $Enums.UserPlan
 }
 
 export type UserUpdateManyMutationInput = {
@@ -510,12 +408,6 @@ export type UserUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  plan?: Prisma.EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -529,12 +421,6 @@ export type UserUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  plan?: Prisma.EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
 }
 
 export type StringNullableListFilter<$PrismaModel = never> = {
@@ -556,12 +442,6 @@ export type UserCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
   restDays?: Prisma.SortOrder
-  stripeCustomerId?: Prisma.SortOrder
-  stripeSubscriptionId?: Prisma.SortOrder
-  stripePriceId?: Prisma.SortOrder
-  stripeCurrentPeriodEnd?: Prisma.SortOrder
-  subscriptionStatus?: Prisma.SortOrder
-  plan?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -579,12 +459,6 @@ export type UserMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
-  stripeCustomerId?: Prisma.SortOrder
-  stripeSubscriptionId?: Prisma.SortOrder
-  stripePriceId?: Prisma.SortOrder
-  stripeCurrentPeriodEnd?: Prisma.SortOrder
-  subscriptionStatus?: Prisma.SortOrder
-  plan?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -597,12 +471,6 @@ export type UserMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
-  stripeCustomerId?: Prisma.SortOrder
-  stripeSubscriptionId?: Prisma.SortOrder
-  stripePriceId?: Prisma.SortOrder
-  stripeCurrentPeriodEnd?: Prisma.SortOrder
-  subscriptionStatus?: Prisma.SortOrder
-  plan?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -642,14 +510,6 @@ export type FloatFieldUpdateOperationsInput = {
 export type UserUpdaterestDaysInput = {
   set?: string[]
   push?: string | string[]
-}
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
-export type EnumUserPlanFieldUpdateOperationsInput = {
-  set?: $Enums.UserPlan
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -698,12 +558,6 @@ export type UserCreateWithoutExamsInput = {
   updatedAt?: Date | string
   maxHoursPerWeek?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
-  stripeCustomerId?: string | null
-  stripeSubscriptionId?: string | null
-  stripePriceId?: string | null
-  stripeCurrentPeriodEnd?: Date | string | null
-  subscriptionStatus?: string | null
-  plan?: $Enums.UserPlan
   studySessions?: Prisma.StudySessionCreateNestedManyWithoutUserInput
 }
 
@@ -718,12 +572,6 @@ export type UserUncheckedCreateWithoutExamsInput = {
   updatedAt?: Date | string
   maxHoursPerWeek?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
-  stripeCustomerId?: string | null
-  stripeSubscriptionId?: string | null
-  stripePriceId?: string | null
-  stripeCurrentPeriodEnd?: Date | string | null
-  subscriptionStatus?: string | null
-  plan?: $Enums.UserPlan
   studySessions?: Prisma.StudySessionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -753,12 +601,6 @@ export type UserUpdateWithoutExamsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  plan?: Prisma.EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
   studySessions?: Prisma.StudySessionUpdateManyWithoutUserNestedInput
 }
 
@@ -773,12 +615,6 @@ export type UserUncheckedUpdateWithoutExamsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  plan?: Prisma.EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
   studySessions?: Prisma.StudySessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -792,12 +628,6 @@ export type UserCreateWithoutStudySessionsInput = {
   updatedAt?: Date | string
   maxHoursPerWeek?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
-  stripeCustomerId?: string | null
-  stripeSubscriptionId?: string | null
-  stripePriceId?: string | null
-  stripeCurrentPeriodEnd?: Date | string | null
-  subscriptionStatus?: string | null
-  plan?: $Enums.UserPlan
   exams?: Prisma.ExamCreateNestedManyWithoutUserInput
 }
 
@@ -812,12 +642,6 @@ export type UserUncheckedCreateWithoutStudySessionsInput = {
   updatedAt?: Date | string
   maxHoursPerWeek?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
-  stripeCustomerId?: string | null
-  stripeSubscriptionId?: string | null
-  stripePriceId?: string | null
-  stripeCurrentPeriodEnd?: Date | string | null
-  subscriptionStatus?: string | null
-  plan?: $Enums.UserPlan
   exams?: Prisma.ExamUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -847,12 +671,6 @@ export type UserUpdateWithoutStudySessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  plan?: Prisma.EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
   exams?: Prisma.ExamUpdateManyWithoutUserNestedInput
 }
 
@@ -867,12 +685,6 @@ export type UserUncheckedUpdateWithoutStudySessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
-  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  stripeCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  plan?: Prisma.EnumUserPlanFieldUpdateOperationsInput | $Enums.UserPlan
   exams?: Prisma.ExamUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -927,12 +739,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   maxHoursPerWeek?: boolean
   restDays?: boolean
-  stripeCustomerId?: boolean
-  stripeSubscriptionId?: boolean
-  stripePriceId?: boolean
-  stripeCurrentPeriodEnd?: boolean
-  subscriptionStatus?: boolean
-  plan?: boolean
   exams?: boolean | Prisma.User$examsArgs<ExtArgs>
   studySessions?: boolean | Prisma.User$studySessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -949,12 +755,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   maxHoursPerWeek?: boolean
   restDays?: boolean
-  stripeCustomerId?: boolean
-  stripeSubscriptionId?: boolean
-  stripePriceId?: boolean
-  stripeCurrentPeriodEnd?: boolean
-  subscriptionStatus?: boolean
-  plan?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -968,12 +768,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   maxHoursPerWeek?: boolean
   restDays?: boolean
-  stripeCustomerId?: boolean
-  stripeSubscriptionId?: boolean
-  stripePriceId?: boolean
-  stripeCurrentPeriodEnd?: boolean
-  subscriptionStatus?: boolean
-  plan?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -987,15 +781,9 @@ export type UserSelectScalar = {
   updatedAt?: boolean
   maxHoursPerWeek?: boolean
   restDays?: boolean
-  stripeCustomerId?: boolean
-  stripeSubscriptionId?: boolean
-  stripePriceId?: boolean
-  stripeCurrentPeriodEnd?: boolean
-  subscriptionStatus?: boolean
-  plan?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkId" | "email" | "firstName" | "lastName" | "phone" | "createdAt" | "updatedAt" | "maxHoursPerWeek" | "restDays" | "stripeCustomerId" | "stripeSubscriptionId" | "stripePriceId" | "stripeCurrentPeriodEnd" | "subscriptionStatus" | "plan", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkId" | "email" | "firstName" | "lastName" | "phone" | "createdAt" | "updatedAt" | "maxHoursPerWeek" | "restDays", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   exams?: boolean | Prisma.User$examsArgs<ExtArgs>
   studySessions?: boolean | Prisma.User$studySessionsArgs<ExtArgs>
@@ -1021,12 +809,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     updatedAt: Date
     maxHoursPerWeek: number
     restDays: string[]
-    stripeCustomerId: string | null
-    stripeSubscriptionId: string | null
-    stripePriceId: string | null
-    stripeCurrentPeriodEnd: Date | null
-    subscriptionStatus: string | null
-    plan: $Enums.UserPlan
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1462,12 +1244,6 @@ export interface UserFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly maxHoursPerWeek: Prisma.FieldRef<"User", 'Float'>
   readonly restDays: Prisma.FieldRef<"User", 'String[]'>
-  readonly stripeCustomerId: Prisma.FieldRef<"User", 'String'>
-  readonly stripeSubscriptionId: Prisma.FieldRef<"User", 'String'>
-  readonly stripePriceId: Prisma.FieldRef<"User", 'String'>
-  readonly stripeCurrentPeriodEnd: Prisma.FieldRef<"User", 'DateTime'>
-  readonly subscriptionStatus: Prisma.FieldRef<"User", 'String'>
-  readonly plan: Prisma.FieldRef<"User", 'UserPlan'>
 }
     
 

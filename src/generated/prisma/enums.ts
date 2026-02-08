@@ -9,14 +9,6 @@
 * 🟢 You can import this file directly.
 */
 
-export const UserPlan = {
-  FREE: 'FREE',
-  PRO: 'PRO'
-} as const
-
-export type UserPlan = (typeof UserPlan)[keyof typeof UserPlan]
-
-
 export const ExamStatus = {
   UPCOMING: 'UPCOMING',
   COMPLETED: 'COMPLETED'
