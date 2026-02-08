@@ -28,10 +28,10 @@ export type DbUser = {
 
 /**
  * Check if a user has an active PRO subscription
- * A user is PRO if subscriptionStatus is exactly "active"
+ * A user is PRO if subscriptionStatus is "active" or "trialing"
  */
 export function isProUser(user: DbUser): boolean {
-  return user.subscriptionStatus === "active";
+  return user.subscriptionStatus === "active" || user.subscriptionStatus === "trialing";
 }
 
 /**

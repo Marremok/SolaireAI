@@ -94,11 +94,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return;
   }
 
-  // Update user with subscription ID (status will be updated by subscription.created event)
+  // Set subscription ID and grant PRO immediately as a safety net
+  // (subscription.created/updated webhook will sync the full status later)
   await prisma.user.update({
     where: { id: user.id },
     data: {
       stripeSubscriptionId: subscriptionId,
+      subscriptionStatus: "active",
+      plan: "PRO",
     },
   });
 
@@ -117,7 +120,10 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const subscriptionId = subscription.id;
   const status = subscription.status;
   const priceId = subscription.items.data[0]?.price.id;
-  const currentPeriodEnd = new Date((subscription as any).current_period_end * 1000);
+  const rawPeriodEnd = (subscription as any).current_period_end;
+  const currentPeriodEnd = rawPeriodEnd
+    ? new Date(typeof rawPeriodEnd === "number" ? rawPeriodEnd * 1000 : rawPeriodEnd)
+    : null;
 
   console.log(`[Subscription Update] ${subscriptionId} -> status: ${status}`);
 
@@ -133,7 +139,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 
   // Determine plan based on status
   // Only "active" status grants PRO access
-  const plan = status === "active" ? "PRO" : "FREE";
+  const plan = (status === "active" || status === "trialing") ? "PRO" : "FREE";
 
   // Update user with latest subscription data
   await prisma.user.update({
