@@ -65,7 +65,7 @@ model Exam {
   preferredSessionLengthMinutes Int @default(60)
   status        ExamStatus  @default(UPCOMING)
 
-  user          User        @relation(fields: [userId], references: [id])
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   studySessions StudySession[]
   scheduleStatus ScheduleStatus @default(NONE)
 
