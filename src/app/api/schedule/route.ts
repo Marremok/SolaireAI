@@ -52,6 +52,12 @@ function getFriendlyErrorMessage(error: Error): string {
   if (msg.includes("no available study days")) {
     return "Cannot create schedule: All days are marked as rest days. Go to Settings and reduce rest days.";
   }
+  if (msg.includes("exam is too soon") || msg.includes("too low for even one session")) {
+    return "Cannot create schedule: The exam is too soon or your target study hours are too low to fit even one session.";
+  }
+  if (msg.includes("exam date is today or in the past")) {
+    return "Cannot create schedule: The exam date has already passed or is today.";
+  }
   return error.message;
 }
 
@@ -63,9 +69,8 @@ function deriveConstraints(
   },
   user: {
     maxHoursPerWeek: number;
+    maxHoursPerDay: number;
     restDays: string[];
-    // REMOVED: preferredSessionLengthMinutes
-    // REMOVED: studyIntensity
   },
   otherSessions: { date: Date; duration: number }[]
 ) {
@@ -79,10 +84,11 @@ function deriveConstraints(
     throw new Error("No available study days - all days marked as rest days");
   }
 
-  // Calculate max minutes per day based on available days
-  const maxMinutesPerDay = Math.floor(
+  // Calculate max minutes per day based on available days, capped by user's daily limit
+  const calculatedMax = Math.floor(
     (maxHoursPerWeek * 60) / Math.max(availableDaysPerWeek, 1)
   );
+  const maxMinutesPerDay = Math.min(calculatedMax, Math.floor(user.maxHoursPerDay * 60));
 
   // Edge case: Capacity too low
   if (maxHoursPerWeek < 0.5) {
@@ -184,6 +190,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Exam not found" }, { status: 404 });
     }
 
+    // Guard: exam date must be in the future
+    const examDate = new Date(exam.date);
+    examDate.setUTCHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    if (examDate <= today) {
+      return NextResponse.json({
+        success: false,
+        error: "Cannot create schedule: exam date is today or in the past.",
+      });
+    }
+
     // Atomic guard: only proceed if scheduleStatus is NONE
     const guardResult = await prisma.exam.updateMany({
       where: { id: examId, scheduleStatus: "NONE" },
@@ -225,6 +243,18 @@ export async function POST(req: Request) {
         });
       }
 
+      // Guard: need at least 1 session to create a schedule
+      if (constraints.totalSessionsNeeded <= 0) {
+        await prisma.exam.update({
+          where: { id: examId },
+          data: { scheduleStatus: "FAILED" },
+        });
+        return NextResponse.json({
+          success: false,
+          error: "Cannot create schedule: exam is too soon or target study hours are too low for even one session.",
+        });
+      }
+
       const studyMethods = fullExam.studyMethods as string[];
       const claudeInput = {
         exam: {
@@ -235,72 +265,37 @@ export async function POST(req: Request) {
           studyMethods,
           targetHoursPerWeek: fullExam.hoursPerWeek ?? 5,
         },
-        constraints,
-        // REMOVED: userPreferences section (no longer needed with mathematical distribution)
+        constraints: {
+          ...constraints,
+          maxHoursPerDay: fullExam.user.maxHoursPerDay,
+        },
       };
 
-      const systemPrompt = `You are an AI study schedule optimizer that creates mathematically-distributed study sessions.
+      const systemPrompt = `You are a study schedule optimizer. Create evenly-distributed study sessions.
 
-## Your Task
-Create a study schedule that EVENLY DISTRIBUTES sessions across available dates until the exam.
+RULES:
+1. Create exactly totalSessionsNeeded sessions (or as close as capacity allows). If totalSessionsNeeded exceeds available dates, create one session per available date.
+2. Space sessions EVENLY across availableDates using interval: floor(availableDates.length / totalSessionsNeeded).
+3. Each session duration: preferredSessionLength minutes (±15 min flexibility). Integer between 30-120.
+4. NEVER exceed maxMinutesPerDay on any date. Account for existingMinutesByDate. Skip dates with < 30 min remaining capacity.
+5. NEVER exceed maxHoursPerDay for any single day.
+6. ONLY use dates from the availableDates array.
+7. Cycle through the exam's studyMethods evenly. Never repeat the same method consecutively.
 
-## Input Context
-- **Exam details**: title, target hours/week, allowed study methods, preferred session length
-- **Constraints**: availableDates (rest days excluded), max daily capacity, existing commitments
-- **Calculated targets**: sessionsPerWeek, totalSessionsNeeded
-
-## Strict Rules
-
-### 1. Mathematical Distribution (CRITICAL)
-- Create exactly totalSessionsNeeded sessions (or as close as capacity allows)
-- Sessions MUST be evenly spaced across availableDates
-- Calculate interval: intervalDays = Math.floor(availableDates.length / totalSessionsNeeded)
-- Place sessions at regular intervals: dates[0], dates[intervalDays], dates[2×intervalDays], etc.
-- NO subjective pacing - use pure mathematical distribution
-
-### 2. Session Duration
-- Target: preferredSessionLength minutes per session
-- Allowed range: ±15 minutes flexibility
-- Respect daily capacity limits
-
-### 3. Study Method Rotation
-- Cycle through exam's allowed study methods
-- Do NOT repeat the same method consecutively
-- Distribute methods evenly
-
-### 4. Capacity Constraints
-- NEVER exceed maxMinutesPerDay for any date
-- Account for existingMinutesByDate (other exam sessions)
-- Skip dates if remaining capacity < 30 minutes
-
-### 5. Date Validation
-- ONLY use dates from availableDates array (rest days already filtered)
-
-## Output Format
-Return sessions array with:
-- **date**: ISO date string (YYYY-MM-DD) from availableDates
-- **durationMinutes**: integer 30-120, close to preferredSessionLength
-- **method**: one of exam's allowed study methods
-
-## Validation
-- Session count matches totalSessionsNeeded (±10% tolerance)
-- Sessions evenly spaced (not clustered)
-- No daily capacity exceeded
-- Methods rotated
-
-Generate the schedule now.`;
+OUTPUT: sessions array with { date (YYYY-MM-DD), durationMinutes (integer), method (from studyMethods) }.`;
 
 
       const message = await anthropic.messages.create(
         {
           model: "claude-haiku-4-5-20251001",
           max_tokens: 4096,
+          system: systemPrompt,
           tools: [studyScheduleToolSchema],
           tool_choice: { type: "tool", name: "create_study_schedule" },
           messages: [
             {
               role: "user",
-              content: `${systemPrompt}\n\nExam, constraints, and user preferences:\n${JSON.stringify(claudeInput, null, 2)}`,
+              content: JSON.stringify(claudeInput, null, 2),
             },
           ],
         },

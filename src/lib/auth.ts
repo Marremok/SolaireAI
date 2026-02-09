@@ -15,6 +15,7 @@ export type DbUser = {
   createdAt: Date;
   updatedAt: Date;
   maxHoursPerWeek: number;
+  maxHoursPerDay: number;
   restDays: string[];
 };
 

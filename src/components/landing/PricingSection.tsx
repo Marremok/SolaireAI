@@ -3,19 +3,19 @@
 import { Button } from "@/components/ui/button"
 import { SignUpButton } from "@clerk/nextjs"
 import { motion } from "framer-motion"
-import { Sparkles, CheckCircle2, Zap, Trophy, Timer, Brain, Notebook } from "lucide-react"
+import { Sparkles, CheckCircle2, Zap, Trophy, Timer, Brain, Notebook, ArrowRight } from "lucide-react"
 import { PRICING } from "@/lib/constants"
 
 export default function SingleTierPricing() {
   const features = [
     { icon: Brain, text: "AI-Generated Personalized Study Schedule" },
-    { icon: Timer, text: "Smart Calendar Sync & Conflict Resolution" },
-    { icon: Notebook, text: "Instructions for every study session" },
-    { icon: Zap, text: "Unlimited Active Subjects & Exams" },
+    { icon: Timer, text: "Reminders Every Day" },
+    { icon: Notebook, text: "Set Your Preferences" },
+    { icon: Zap, text: "Unlimited Active Exams" },
   ]
 
   return (
-    <section className="relative py-32 px-6 overflow-hidden bg-background">
+    <section className="relative py-32 px-6 overflow-hidden bg-background" id="pricingsection">
       {/* --- EXTRA FANCY BACKGROUND --- */}
       <div className="absolute inset-0 -z-10">
         {/* Animated Radial Sken */}
@@ -44,9 +44,9 @@ export default function SingleTierPricing() {
           </motion.div>
           
           <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">
-            Master Every Final. <br />
+            Master Every Exam. <br />
             <span className="bg-linear-to-r from-primary via-primary/80 to-violet-500 bg-clip-text text-transparent">
-              One simple plan.
+              With one simple plan.
             </span>
           </h2>
         </div>
@@ -71,9 +71,9 @@ export default function SingleTierPricing() {
               {/* Left: Value Prop */}
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-3xl font-bold mb-2">SolaireAI Plus</h3>
+                  <h3 className="text-3xl font-bold mb-2">SolaireAI Pro</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    Everything you need to excel in university. No tiers, no limits, just your best grades yet.
+                    Everything you need to excel with your studies. No tiers, no limits, just your best grades yet.
                   </p>
                 </div>
 
@@ -103,7 +103,19 @@ export default function SingleTierPricing() {
                   </p>
                 </div>
 
-                <SignUpButton/>
+                <SignUpButton mode="modal">
+                  <Button 
+                    className="relative w-full h-14 px-8 overflow-hidden rounded-2xl bg-primary text-primary-foreground font-bold text-lg shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] active:scale-[0.98]"
+                  >
+                    {/* Shimmer-effekt som sveper över knappen */}
+                    <span className="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
+                    
+                    <span className="relative flex items-center justify-center gap-2">
+                      Start Free Trial
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Button>
+                </SignUpButton>
 
                 <p className="mt-6 text-xs text-muted-foreground text-center max-w-50">
                   Billed monthly after trial. Cancel anytime with one click.

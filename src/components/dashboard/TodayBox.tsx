@@ -182,10 +182,10 @@ export default function TodayBox() {
         {/* Footer Link */}
         <div className="mt-8 pt-4 border-t border-border/20 flex justify-end">
           <Link
-            href="/dashboard/calendar"
+            href="/dashboard/exams"
             className="flex items-center gap-2 text-xs font-semibold text-primary hover:opacity-80 transition-opacity"
           >
-            View full calendar <ArrowRight className="h-3 w-3" />
+            View all exams <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
       </div>

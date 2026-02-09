@@ -21,7 +21,7 @@ export default async function ExamsPage() {
               </div>
               <h1 className="text-2xl font-semibold tracking-tight">Exams</h1>
             </div>
-            <p className="text-muted-foreground text-sm ml-[52px]">
+            <p className="text-muted-foreground text-sm ml-13">
               Manage your exams and track your study progress
             </p>
           </div>

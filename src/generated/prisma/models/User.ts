@@ -29,11 +29,13 @@ export type AggregateUser = {
 export type UserAvgAggregateOutputType = {
   id: number | null
   maxHoursPerWeek: number | null
+  maxHoursPerDay: number | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
   maxHoursPerWeek: number | null
+  maxHoursPerDay: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -46,6 +48,7 @@ export type UserMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   maxHoursPerWeek: number | null
+  maxHoursPerDay: number | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -58,6 +61,7 @@ export type UserMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   maxHoursPerWeek: number | null
+  maxHoursPerDay: number | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -70,6 +74,7 @@ export type UserCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   maxHoursPerWeek: number
+  maxHoursPerDay: number
   restDays: number
   _all: number
 }
@@ -78,11 +83,13 @@ export type UserCountAggregateOutputType = {
 export type UserAvgAggregateInputType = {
   id?: true
   maxHoursPerWeek?: true
+  maxHoursPerDay?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
   maxHoursPerWeek?: true
+  maxHoursPerDay?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -95,6 +102,7 @@ export type UserMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   maxHoursPerWeek?: true
+  maxHoursPerDay?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -107,6 +115,7 @@ export type UserMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   maxHoursPerWeek?: true
+  maxHoursPerDay?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -119,6 +128,7 @@ export type UserCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   maxHoursPerWeek?: true
+  maxHoursPerDay?: true
   restDays?: true
   _all?: true
 }
@@ -219,6 +229,7 @@ export type UserGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   maxHoursPerWeek: number
+  maxHoursPerDay: number
   restDays: string[]
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
@@ -255,6 +266,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   maxHoursPerWeek?: Prisma.FloatFilter<"User"> | number
+  maxHoursPerDay?: Prisma.FloatFilter<"User"> | number
   restDays?: Prisma.StringNullableListFilter<"User">
   exams?: Prisma.ExamListRelationFilter
   studySessions?: Prisma.StudySessionListRelationFilter
@@ -270,6 +282,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
+  maxHoursPerDay?: Prisma.SortOrder
   restDays?: Prisma.SortOrder
   exams?: Prisma.ExamOrderByRelationAggregateInput
   studySessions?: Prisma.StudySessionOrderByRelationAggregateInput
@@ -288,6 +301,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   maxHoursPerWeek?: Prisma.FloatFilter<"User"> | number
+  maxHoursPerDay?: Prisma.FloatFilter<"User"> | number
   restDays?: Prisma.StringNullableListFilter<"User">
   exams?: Prisma.ExamListRelationFilter
   studySessions?: Prisma.StudySessionListRelationFilter
@@ -303,6 +317,7 @@ export type UserOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
+  maxHoursPerDay?: Prisma.SortOrder
   restDays?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
@@ -324,6 +339,7 @@ export type UserScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   maxHoursPerWeek?: Prisma.FloatWithAggregatesFilter<"User"> | number
+  maxHoursPerDay?: Prisma.FloatWithAggregatesFilter<"User"> | number
   restDays?: Prisma.StringNullableListFilter<"User">
 }
 
@@ -336,6 +352,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   maxHoursPerWeek?: number
+  maxHoursPerDay?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
   exams?: Prisma.ExamCreateNestedManyWithoutUserInput
   studySessions?: Prisma.StudySessionCreateNestedManyWithoutUserInput
@@ -351,6 +368,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   maxHoursPerWeek?: number
+  maxHoursPerDay?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
   exams?: Prisma.ExamUncheckedCreateNestedManyWithoutUserInput
   studySessions?: Prisma.StudySessionUncheckedCreateNestedManyWithoutUserInput
@@ -365,6 +383,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxHoursPerDay?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
   exams?: Prisma.ExamUpdateManyWithoutUserNestedInput
   studySessions?: Prisma.StudySessionUpdateManyWithoutUserNestedInput
@@ -380,6 +399,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxHoursPerDay?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
   exams?: Prisma.ExamUncheckedUpdateManyWithoutUserNestedInput
   studySessions?: Prisma.StudySessionUncheckedUpdateManyWithoutUserNestedInput
@@ -395,6 +415,7 @@ export type UserCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   maxHoursPerWeek?: number
+  maxHoursPerDay?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
 }
 
@@ -407,6 +428,7 @@ export type UserUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxHoursPerDay?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
 }
 
@@ -420,6 +442,7 @@ export type UserUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxHoursPerDay?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
 }
 
@@ -441,12 +464,14 @@ export type UserCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
+  maxHoursPerDay?: Prisma.SortOrder
   restDays?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
+  maxHoursPerDay?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -459,6 +484,7 @@ export type UserMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
+  maxHoursPerDay?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -471,11 +497,13 @@ export type UserMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
+  maxHoursPerDay?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   maxHoursPerWeek?: Prisma.SortOrder
+  maxHoursPerDay?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -557,6 +585,7 @@ export type UserCreateWithoutExamsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   maxHoursPerWeek?: number
+  maxHoursPerDay?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
   studySessions?: Prisma.StudySessionCreateNestedManyWithoutUserInput
 }
@@ -571,6 +600,7 @@ export type UserUncheckedCreateWithoutExamsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   maxHoursPerWeek?: number
+  maxHoursPerDay?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
   studySessions?: Prisma.StudySessionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -600,6 +630,7 @@ export type UserUpdateWithoutExamsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxHoursPerDay?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
   studySessions?: Prisma.StudySessionUpdateManyWithoutUserNestedInput
 }
@@ -614,6 +645,7 @@ export type UserUncheckedUpdateWithoutExamsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxHoursPerDay?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
   studySessions?: Prisma.StudySessionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -627,6 +659,7 @@ export type UserCreateWithoutStudySessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   maxHoursPerWeek?: number
+  maxHoursPerDay?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
   exams?: Prisma.ExamCreateNestedManyWithoutUserInput
 }
@@ -641,6 +674,7 @@ export type UserUncheckedCreateWithoutStudySessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   maxHoursPerWeek?: number
+  maxHoursPerDay?: number
   restDays?: Prisma.UserCreaterestDaysInput | string[]
   exams?: Prisma.ExamUncheckedCreateNestedManyWithoutUserInput
 }
@@ -670,6 +704,7 @@ export type UserUpdateWithoutStudySessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxHoursPerDay?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
   exams?: Prisma.ExamUpdateManyWithoutUserNestedInput
 }
@@ -684,6 +719,7 @@ export type UserUncheckedUpdateWithoutStudySessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   maxHoursPerWeek?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxHoursPerDay?: Prisma.FloatFieldUpdateOperationsInput | number
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
   exams?: Prisma.ExamUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -738,6 +774,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   maxHoursPerWeek?: boolean
+  maxHoursPerDay?: boolean
   restDays?: boolean
   exams?: boolean | Prisma.User$examsArgs<ExtArgs>
   studySessions?: boolean | Prisma.User$studySessionsArgs<ExtArgs>
@@ -754,6 +791,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   maxHoursPerWeek?: boolean
+  maxHoursPerDay?: boolean
   restDays?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -767,6 +805,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   maxHoursPerWeek?: boolean
+  maxHoursPerDay?: boolean
   restDays?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -780,10 +819,11 @@ export type UserSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   maxHoursPerWeek?: boolean
+  maxHoursPerDay?: boolean
   restDays?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkId" | "email" | "firstName" | "lastName" | "phone" | "createdAt" | "updatedAt" | "maxHoursPerWeek" | "restDays", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkId" | "email" | "firstName" | "lastName" | "phone" | "createdAt" | "updatedAt" | "maxHoursPerWeek" | "maxHoursPerDay" | "restDays", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   exams?: boolean | Prisma.User$examsArgs<ExtArgs>
   studySessions?: boolean | Prisma.User$studySessionsArgs<ExtArgs>
@@ -808,6 +848,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     updatedAt: Date
     maxHoursPerWeek: number
+    maxHoursPerDay: number
     restDays: string[]
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -1243,6 +1284,7 @@ export interface UserFieldRefs {
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly maxHoursPerWeek: Prisma.FieldRef<"User", 'Float'>
+  readonly maxHoursPerDay: Prisma.FieldRef<"User", 'Float'>
   readonly restDays: Prisma.FieldRef<"User", 'String[]'>
 }
     

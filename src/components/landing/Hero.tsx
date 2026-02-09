@@ -41,11 +41,11 @@ export default function Hero() {
           >
             <h1 className="max-w-4xl text-5xl font-bold tracking-tight sm:text-7xl lg:text-8xl">
               <span className="bg-linear-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
-                Master your finals
+                Master your studies
               </span>
               <br />
               <span className="bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                without the stress.
+                and save time.
               </span>
             </h1>
           </motion.div>
@@ -104,11 +104,11 @@ export default function Hero() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-primary" />
-              <span>Syncs with Canvas & Notion</span>
+              <span>7-day Free Trial</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-primary" />
-              <span>24/7 AI Support</span>
+              <span>Unlimited Usage</span>
             </div>
           </motion.div>
 

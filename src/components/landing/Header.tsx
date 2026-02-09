@@ -35,15 +35,32 @@ export default function LandingHeader() {
 
         {/* --- NAVIGATION LINKS --- */}
         <div className="hidden md:flex items-center gap-10">
-          {["How it Works", "Pricing", "About"].map((item) => (
+          <div className="nav-item-wrapper">
             <Link 
-              key={item}
-              href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
+              href="#how-it-works"
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
             >
-              {item}
+              How it Works
             </Link>
-          ))}
+          </div>
+
+          <div className="nav-item-wrapper">
+            <Link 
+              href="#pricingsection"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
+            >
+              Pricing
+            </Link>
+          </div>
+
+          <div className="nav-item-wrapper">
+            <Link 
+              href="#about"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
+            >
+              About
+            </Link>
+          </div>
         </div>
 
         {/* --- AUTH ACTIONS --- */}

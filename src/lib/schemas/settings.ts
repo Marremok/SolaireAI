@@ -21,6 +21,11 @@ export const userSettingsSchema = z.object({
     .min(0.5, "Minimum 0.5 hours per week")
     .max(168, "Maximum 168 hours per week"),
 
+  maxHoursPerDay: z
+    .number()
+    .min(0.5, "Minimum 0.5 hours per day")
+    .max(24, "Maximum 24 hours per day"),
+
   restDays: z
     .array(z.enum(DAY_OPTIONS))
     .max(6, "You must have at least 1 available study day")

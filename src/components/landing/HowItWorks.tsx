@@ -7,14 +7,14 @@ import { useRef } from "react"
 const steps = [
   {
     title: "Add your exams",
-    description: "Simply input your exam dates and study materials. Our interface makes data entry feel like a breeze.",
+    description: "Simply input your exam dates and study materials. Our interface makes it easy to add upcoming exams.",
     icon: CalendarPlus,
     color: "from-blue-500/20 to-cyan-500/20",
     iconColor: "text-blue-400",
   },
   {
     title: "AI Optimization",
-    description: "SolaireAI analyzes your cognitive load and peak focus hours to build the scientifically perfect schedule.",
+    description: "SolaireAI analyzes your exams and preferences to build a balanced study schedule.",
     icon: Cpu,
     color: "from-primary/20 to-violet-500/20",
     iconColor: "text-primary",
@@ -68,9 +68,9 @@ export default function HowItWorks() {
             transition={{ delay: 0.1 }}
             className="mt-8 text-4xl md:text-6xl font-bold tracking-tighter text-foreground"
           >
-            From failing to <br className="hidden md:block" />
+            From academic stress<br className="hidden md:block" />
             <span className="bg-linear-to-r from-primary via-primary/80 to-violet-400 bg-clip-text text-transparent">
-              Academic Brilliance
+             To academic peace
             </span>
           </motion.h2>
         </div>

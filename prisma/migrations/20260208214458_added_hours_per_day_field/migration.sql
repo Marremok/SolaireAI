@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "maxHoursPerDay" DOUBLE PRECISION NOT NULL DEFAULT 3.0;

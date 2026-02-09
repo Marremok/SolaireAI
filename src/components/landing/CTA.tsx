@@ -1,147 +1,121 @@
 "use client"
 
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Sparkles, CalendarRange, CheckCircle2 } from "lucide-react"
-import { SmartCTAButton } from "@/components/landing/UpgradeButton"
+import { SignUpButton } from "@clerk/nextjs"
+import { motion } from "framer-motion"
+import { Sparkles, CheckCircle2, ArrowRight } from "lucide-react"
+import Image from "next/image"
 
 export default function CTA() {
   return (
-    <section className="relative overflow-hidden py-24 px-6 bg-background">
-      
-      {/* --- BACKGROUND DECORATION --- */}
-      
-      {/* Subtle linear Fade */}
-      <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-primary/5" />
-      
-      {/* Radial Pattern (The "Pulse" of the page) */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.05),transparent_70%)]" />
+    <section className="relative py-32 px-6 overflow-hidden bg-background" id="CTA">
+      {/* --- SAME DYNAMIC BACKGROUND AS PRICING --- */}
+      <div className="absolute inset-0 -z-10">
+        <motion.div 
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.05, 0.15, 0.05],
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-150 w-150 rounded-full bg-primary/20 blur-[100px]" 
+        />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-50 contrast-150"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--primary)/0.03)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary)/0.03)_1px,transparent_1px)] bg-size-[64px_64px] mask-[radial-gradient(ellipse_at_center,black,transparent)]"></div>
+      </div>
 
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
+      <div className="relative z-10 max-w-7xl mx-auto">
+        {/* --- TEXT CONTENT (CENTERED TOP) --- */}
+        <div className="text-center mb-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-md mb-6"
+          >
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">Final Step</span>
+          </motion.div>
+
+          <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 leading-[0.9]">
+            Ready to transform <br />
+            <span className="bg-linear-to-r from-primary via-primary/80 to-violet-500 bg-clip-text text-transparent">
+              your study habits?
+            </span>
+          </h2>
           
-          {/* --- LEFT CONTENT --- */}
-          <div className="space-y-8 text-center lg:text-left">
-            <div className="space-y-4">
-              
-              {/* Animated Pill Badge */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 backdrop-blur-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
-                </span>
-                <span className="text-xs font-medium text-primary">Limited time free access</span>
-              </div>
-
-              {/* Main Headline with Gradient */}
-              <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-                <span className="text-foreground">
-                  Stop stressing.
-                </span>
-                <br />
-                <span className="bg-linear-to-r from-primary to-violet-500 bg-clip-text text-transparent">
-                  Start passing.
-                </span>
-              </h2>
-
-              <p className="mx-auto text-lg leading-relaxed text-muted-foreground lg:mx-0 max-w-lg">
-                Don't let exam season overwhelm you. Join 10,000+ students using SolaireAI to generate their perfect study roadmap in seconds.
-              </p>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
-              <SmartCTAButton
-                size="lg"
-                className="group relative h-12 overflow-hidden rounded-xl bg-primary px-8 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/30"
+          <div className="flex flex-col items-center gap-6">
+            <SignUpButton mode="modal">
+              <Button 
+                className="relative h-14 px-10 overflow-hidden rounded-2xl bg-primary text-primary-foreground font-bold text-lg shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all duration-300 hover:scale-[1.05]"
               >
-                <>
-                  <div className="relative z-10 flex items-center gap-2 font-semibold">
-                    <Sparkles className="h-4 w-4" />
-                    Generate my Schedule
-                  </div>
-                  {/* Shine effect on hover */}
-                  <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-                </>
-              </SmartCTAButton>
-
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-12 rounded-xl border-primary/20 bg-background/50 px-8 font-semibold backdrop-blur-sm transition-all hover:bg-primary/5 hover:border-primary/40"
-                onClick={() => {
-                  document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                <CalendarRange className="mr-2 h-4 w-4" />
-                See Example Plan
+                <span className="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
+                <span className="relative flex items-center justify-center gap-2">
+                  Start Your Free Trial
+                  <ArrowRight className="h-5 w-5" />
+                </span>
               </Button>
-            </div>
+            </SignUpButton>
             
-            {/* Mini Trust Signal */}
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground lg:justify-start pt-2">
-                <div className="flex items-center gap-1">
-                    <CheckCircle2 className="h-4 w-4 text-primary" />
-                    <span>No credit card</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <CheckCircle2 className="h-4 w-4 text-primary" />
-                    <span>Cancel anytime</span>
-                </div>
-            </div>
-          </div>
-
-          {/* --- RIGHT CONTENT (IMAGE) --- */}
-          <div className="relative flex justify-center lg:justify-end">
-            <div className="relative group">
-              
-              {/* Floating Badge (Top Left) */}
-              <div className="absolute -left-6 top-8 z-20 animate-bounce delay-700 rounded-xl border border-white/10 bg-background/80 p-3 shadow-xl backdrop-blur-md transition-transform duration-300 hover:scale-105 animation-duration-[3s]">
-                <div className="flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    {[1,2,3].map((i) => (
-                        <div key={i} className="h-6 w-6 rounded-full bg-slate-200 border-2 border-background" />
-                    ))}
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-foreground">10k+ Students</p>
-                    <p className="text-[10px] text-muted-foreground">Planning now</p>
-                  </div>
-                </div>
+            <div className="flex gap-6 opacity-60">
+              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+                <CheckCircle2 className="h-4 w-4 text-primary" /> No Card Needed
               </div>
-
-              {/* Main Image Glow/Backdrop */}
-              <div className="absolute inset-0 translate-y-4 rounded-3xl bg-linear-to-tr from-primary/20 to-violet-500/20 blur-2xl transition-all duration-500 group-hover:blur-3xl" />
-
-              {/* The Image (Placeholder - replace src with your app screenshot) */}
-              {/* I've added a border and shadow to make it look like a floating UI card */}
-              <div className="relative overflow-hidden rounded-2xl border border-primary/10 bg-background shadow-2xl transition-transform duration-500 hover:-translate-y-2">
-                 <Image
-                  src="/dashboard-mockup.png" // Replace this with your actual image
-                  alt="SolaireAI Dashboard Preview"
-                  width={600}
-                  height={500}
-                  className="w-87.5 md:w-112.5 object-cover"
-                />
-                
-                {/* If you don't have an image yet, this overlay simulates a UI looks */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-card/5 text-muted-foreground/20">
-                    <p className="font-mono text-sm">Dashboard Preview</p>
-                </div>
+              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+                <CheckCircle2 className="h-4 w-4 text-primary" /> 7-Day Trial
               </div>
-
-              {/* Floating Badge (Bottom Right) */}
-              <div className="absolute -bottom-6 -right-4 z-20 rounded-full border border-primary/20 bg-background/90 px-4 py-2 shadow-xl backdrop-blur-md">
-                 <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-semibold">AI Online</span>
-                 </div>
-              </div>
-
             </div>
           </div>
         </div>
+
+        {/* --- DUAL IMAGE FOCUS --- */}
+        <div className="relative flex flex-col lg:flex-row items-end justify-center gap-8 lg:gap-12 w-full">
+          
+          {/* Image 1: Main Dashboard (Desktop) */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30, y: 20 }}
+            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative w-full lg:w-[65%] z-10"
+          >
+            <div className="relative aspect-1213/722 rounded-4xl md:rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.7)] bg-card/50">
+              <Image 
+                src="/calendar.png" 
+                alt="Dashboard" 
+                fill 
+                className="object-cover object-top"
+                priority 
+              />
+              <div className="absolute inset-0 bg-linear-to-tr from-black/20 via-transparent to-white/5 pointer-events-none" />
+            </div>
+          </motion.div>
+
+          {/* Image 2: Mobile App (Portrait) */}
+          <motion.div 
+            initial={{ opacity: 0, x: 30, y: 40 }}
+            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="relative w-[50%] lg:w-[25%] z-20"
+          >
+            {/* Glow behind mobile */}
+            <div className="absolute inset-0 bg-primary/20 blur-[60px] -z-10" />
+            
+            <div className="relative aspect-504/854 rounded-4xl md:rounded-[2.5rem] overflow-hidden border-[6px] border-background shadow-[0_30px_60px_-12px_rgba(0,0,0,0.8)]">
+              <Image 
+                src="/addexam.png" 
+                alt="Mobile App" 
+                fill 
+                className="object-cover"
+              />
+            </div>
+          </motion.div>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
     </section>
   )
 }

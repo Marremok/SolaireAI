@@ -1,7 +1,7 @@
 "use client"
 
 import { UserButton } from "@clerk/nextjs";
-import { Sparkles, LayoutDashboard, Calendar, Settings, Bell, NotebookPen } from "lucide-react";
+import { Sparkles, LayoutDashboard, Calendar, Settings, Bell, NotebookPen, PencilLine, Mail } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -10,6 +10,7 @@ export default function Navbar() {
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
     { name: "Exams", href: "/dashboard/exams", icon: NotebookPen },
+    { name: "Support", href: "/contact", icon: Mail},
   ];
 
   return (
@@ -58,13 +59,12 @@ export default function Navbar() {
           <div className="h-6 w-px bg-primary/10 mx-1" />
 
           {/* User Profile */}
-          <UserButton 
+          <UserButton
             appearance={{
               elements: {
-                userButtonAvatarBox: "h-9 w-9 border border-primary/20 shadow-sm hover:scale-105 transition-transform",
-                userButtonPopoverCard: "rounded-2xl border border-primary/10 shadow-2xl",
-                userButtonTrigger: "focus:shadow-none focus:outline-hidden"
-              }
+                userButtonAvatarBox: "h-9 w-9",
+                userButtonTrigger: "focus:shadow-none focus:outline-hidden",
+              },
             }}
           />
         </div>

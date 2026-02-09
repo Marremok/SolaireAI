@@ -18,9 +18,8 @@ export async function getUserSettings(): Promise<UserSettingsInput | null> {
     where: { id: dbUser.id },
     select: {
       maxHoursPerWeek: true,
+      maxHoursPerDay: true,
       restDays: true,
-      // REMOVED: preferredSessionLengthMinutes (moved to Exam)
-      // REMOVED: studyIntensity (no longer needed)
     },
   });
 
@@ -45,15 +44,13 @@ export async function updateUserSettings(
     where: { id: dbUser.id },
     data: {
       maxHoursPerWeek: validated.maxHoursPerWeek,
+      maxHoursPerDay: validated.maxHoursPerDay,
       restDays: validated.restDays,
-      // REMOVED: preferredSessionLengthMinutes (moved to Exam)
-      // REMOVED: studyIntensity (no longer needed)
     },
     select: {
       maxHoursPerWeek: true,
+      maxHoursPerDay: true,
       restDays: true,
-      // REMOVED: preferredSessionLengthMinutes (moved to Exam)
-      // REMOVED: studyIntensity (no longer needed)
     },
   });
 

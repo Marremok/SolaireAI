@@ -26,6 +26,7 @@ model User {
 
   // Study capacity settings
   maxHoursPerWeek                 Float    @default(15.0)
+  maxHoursPerDay                  Float    @default(3.0)
 
   // Rest & recovery settings
   restDays      String[]  @default([])

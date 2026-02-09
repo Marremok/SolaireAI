@@ -26,7 +26,6 @@ export default async function Dashboard() {
         <ComingDays/>
         <ExamManagement/>
       </div>
-      <Footer/>
     </div>
   );
 }

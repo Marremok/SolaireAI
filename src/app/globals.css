@@ -186,22 +186,9 @@
   }
 }
 
-.dark {
-  --clerk-color-primary: #1C9CF0;
-  --clerk-color-primary-foreground: #171717;
-  --clerk-color-danger: #FF6467;
-  --clerk-color-success: #22C543;
-  --clerk-color-warning: #F36B16;
-  --clerk-color-neutral: #FAFAFA;
-  --clerk-color-foreground: #E7E9EA;
-  --clerk-color-muted-foreground: #A1A1A1;
-  --clerk-color-background: #171717;
-  --clerk-color-input: #FFFFFF;
-  --clerk-color-input-foreground: #FAFAFA;
-  --clerk-color-ring: #737373;
-  --clerk-color-shimmer: #FFFFFF;
-  --clerk-color-modal-backdrop: #000000;
-  --clerk-border-radius: 0.375rem;
-  --clerk-spacing: 1rem;
-  --clerk-color-muted: #262626;
+
+@keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
 }

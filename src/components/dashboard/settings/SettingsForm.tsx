@@ -46,9 +46,8 @@ export default function SettingsForm() {
     resolver: zodResolver(userSettingsSchema) as any,
     defaultValues: settings || {
       maxHoursPerWeek: 15,
+      maxHoursPerDay: 3,
       restDays: [],
-      // REMOVED: preferredSessionLengthMinutes (moved to Exam)
-      // REMOVED: studyIntensity (no longer needed)
     },
     values: settings || undefined,
   });
@@ -118,40 +117,78 @@ export default function SettingsForm() {
           <div>
             <h2 className="text-lg font-semibold">Study Capacity</h2>
             <p className="text-sm text-muted-foreground">
-              Set your weekly study time limit across all exams
+              Set your time limits to prevent burnout and ensure a balanced schedule.
             </p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="maxHoursPerWeek">Maximum Hours per Week</Label>
-            <div className="flex items-center gap-4">
-              <Input
-                id="maxHoursPerWeek"
-                type="number"
-                step="0.5"
-                min="0.5"
-                max="168"
-                className="w-32"
-                {...register("maxHoursPerWeek", { valueAsNumber: true })}
-              />
-              <span className="text-sm text-muted-foreground">
-                hours/week (
-                {maxHours ? ((maxHours || 0) / 7).toFixed(1) : "0.0"} hrs/day
-                avg)
-              </span>
-            </div>
-            {errors.maxHoursPerWeek && (
-              <p className="text-xs text-destructive">
-                {errors.maxHoursPerWeek.message}
-              </p>
-            )}
-            {getCapacityWarning(maxHours || 0, restDays) && (
-              <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                <p className="text-sm text-yellow-600 dark:text-yellow-400">
-                  {getCapacityWarning(maxHours || 0, restDays)}
-                </p>
+          <div className="grid gap-6 md:grid-cols-2">
+            
+            {/* 1. Maximum Hours Per Week */}
+            <div className="space-y-2">
+              <Label htmlFor="maxHoursPerWeek">Maximum Hours per Week</Label>
+              <div className="flex items-center gap-4">
+                <Input
+                  id="maxHoursPerWeek"
+                  type="number"
+                  step="0.5"
+                  min="0.5"
+                  max="168"
+                  className="w-32"
+                  {...register("maxHoursPerWeek", { valueAsNumber: true })}
+                />
+                <span className="text-sm text-muted-foreground whitespace-nowrap">
+                  hrs/week 
+                  <span className="hidden sm:inline">
+                    ({maxHours ? ((maxHours || 0) / 7).toFixed(1) : "0.0"} /day avg)
+                  </span>
+                </span>
               </div>
-            )}
+              
+              {errors.maxHoursPerWeek && (
+                <p className="text-xs text-destructive">
+                  {errors.maxHoursPerWeek.message}
+                </p>
+              )}
+              
+              {/* Capacity Warning (kept specific to weekly volume) */}
+              {getCapacityWarning(maxHours || 0, restDays) && (
+                <div className="mt-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                  <p className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
+                    {getCapacityWarning(maxHours || 0, restDays)}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* 2. Maximum Hours Per Day (NEW) */}
+            <div className="space-y-2">
+              <Label htmlFor="maxHoursPerDay">Maximum Hours per Day</Label>
+              <div className="flex items-center gap-4">
+                <Input
+                  id="maxHoursPerDay"
+                  type="number"
+                  step="0.5"
+                  min="0.5"
+                  max="24"
+                  className="w-32"
+                  {...register("maxHoursPerDay", { valueAsNumber: true })}
+                />
+                <span className="text-sm text-muted-foreground">
+                  hours/day limit
+                </span>
+              </div>
+              
+              {errors.maxHoursPerDay && (
+                <p className="text-xs text-destructive">
+                  {errors.maxHoursPerDay.message}
+                </p>
+              )}
+
+              <p className="text-[11px] text-muted-foreground pt-1">
+                The AI will never schedule more than this amount in a single day, regardless of weekly goals.
+              </p>
+            </div>
+
           </div>
         </div>
       </Card>

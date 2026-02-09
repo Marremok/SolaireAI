@@ -8,15 +8,17 @@ import { syncUser } from "@/lib/actions/user";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import Footer from "@/components/dashboard/Footer";
+import About from "@/components/landing/About";
 
 export default async function Home() {
-  const user = await currentUser()
+  // const user = await currentUser()
   
   // syncing webhooks
-  await syncUser();
+  // await syncUser();
 
   // redircet auth user to dashboard
-  if (user) redirect("/dashboard")
+  // if (user) redirect("/dashboard")
 
   return (
   
@@ -26,6 +28,8 @@ export default async function Home() {
         <HowItWorks/>
         <PricingSection/>
         <CTA/>
+        <About/>
+        <Footer/>
       </div>
 
   );
