@@ -4,7 +4,6 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { QueryProvider } from "@/components/query-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { clerkAppearance } from "@/lib/clerk-appearance";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +26,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={clerkAppearance}>
+    <ClerkProvider
+      appearance={{
+        layout: {
+          logoImageUrl: "/logo.png",
+          logoPlacement: "inside",
+          socialButtonsPlacement: "bottom",
+          socialButtonsVariant: "iconButton",
+          termsPageUrl: "/terms",
+          privacyPageUrl: "/privacy",
+          helpPageUrl: "/contact",
+          showOptionalFields: false,
+          shimmer: true,
+          animations: true,
+        },
+      }}
+    >
       <html lang="en">
         <head>
           <link rel="icon" href="/logo.png" />

@@ -62,7 +62,8 @@ export default function Navbar() {
           <UserButton
             appearance={{
               elements: {
-                userButtonAvatarBox: "h-9 w-9",
+                userButtonAvatarBox: "h-9 w-9 border border-primary/20 shadow-sm hover:scale-105 transition-transform",
+                userButtonPopoverCard: "rounded-2xl border border-primary/10 shadow-2xl",
                 userButtonTrigger: "focus:shadow-none focus:outline-hidden",
               },
             }}

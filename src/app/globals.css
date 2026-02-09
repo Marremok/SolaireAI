@@ -186,6 +186,25 @@
   }
 }
 
+.dark {
+  --clerk-color-primary: #1C9CF0;
+  --clerk-color-primary-foreground: #FFFFFF;
+  --clerk-color-danger: #EF4444;
+  --clerk-color-success: #22C543;
+  --clerk-color-warning: #F59E0B;
+  --clerk-color-neutral: #A1A1AA;
+  --clerk-color-foreground: #E7E9EA;
+  --clerk-color-muted-foreground: #72767A;
+  --clerk-color-background: #0A0A0A;
+  --clerk-color-input: #1A1A1E;
+  --clerk-color-input-foreground: #E7E9EA;
+  --clerk-color-ring: #1C9CF0;
+  --clerk-color-shimmer: rgba(255, 255, 255, 0.1);
+  --clerk-color-modal-backdrop: rgba(0, 0, 0, 0.6);
+  --clerk-border-radius: 0.75rem;
+  --clerk-spacing: 1rem;
+  --clerk-color-muted: #1A1A1E;
+}
 
 @keyframes shimmer {
     100% {
