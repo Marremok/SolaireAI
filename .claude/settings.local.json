@@ -7,7 +7,9 @@
       "WebFetch(domain:clerk.com)",
       "WebFetch(domain:dev.to)",
       "Bash(npm ls:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx prisma migrate deploy:*)"
     ]
   }
 }

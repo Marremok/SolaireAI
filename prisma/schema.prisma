@@ -45,7 +45,7 @@ model Exam {
   title         String
   subject       String?
   studyMethods  Json
-  description   String?
+  preferences   String?
   date          DateTime
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt

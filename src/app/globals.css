@@ -204,6 +204,146 @@
   --clerk-border-radius: 0.75rem;
   --clerk-spacing: 1rem;
   --clerk-color-muted: #1A1A1E;
+  --clerk-color-surface: #0f1012;
+  --clerk-color-card-background: #0f1012;
+}
+
+/* ── Clerk component overrides (cl- class system) ── */
+
+.cl-card {
+  background: #0f1012 !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.cl-formFieldInput {
+  background: #22303c !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.75rem !important;
+  color: #E7E9EA !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.cl-formFieldInput:focus {
+  border-color: rgba(28, 156, 240, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(28, 156, 240, 0.1) !important;
+}
+
+.cl-formButtonPrimary {
+  background: #1C9CF0 !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px rgba(28, 156, 240, 0.15) !important;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background: rgba(28, 156, 240, 0.85) !important;
+  box-shadow: 0 6px 20px rgba(28, 156, 240, 0.25) !important;
+}
+
+.cl-formButtonPrimary:active {
+  transform: scale(0.98) !important;
+}
+
+.cl-socialButtonsBlockButton {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.75rem !important;
+  transition: background 0.2s, border-color 0.2s !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.cl-socialButtonsIconButton {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.75rem !important;
+  transition: background 0.2s, border-color 0.2s !important;
+}
+
+.cl-socialButtonsIconButton:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.cl-dividerLine {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.cl-dividerText {
+  color: #72767A !important;
+}
+
+.cl-footerActionLink {
+  color: #1C9CF0 !important;
+}
+
+.cl-footerActionLink:hover {
+  color: rgba(28, 156, 240, 0.8) !important;
+}
+
+.cl-headerTitle {
+  color: #E7E9EA !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+}
+
+.cl-headerSubtitle {
+  color: #72767A !important;
+}
+
+.cl-formFieldLabel {
+  color: #A1A1AA !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+}
+
+.cl-userButtonPopoverCard {
+  background: #0f1012 !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.cl-userButtonPopoverActionButton {
+  border-radius: 0.75rem !important;
+  transition: background 0.15s !important;
+}
+
+.cl-userButtonPopoverActionButton:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.cl-modalBackdrop {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.cl-modalContent {
+  border-radius: 1rem !important;
+}
+
+.cl-otpCodeFieldInput {
+  background: #22303c !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #E7E9EA !important;
+}
+
+.cl-formResendCodeLink {
+  color: #1C9CF0 !important;
+}
+
+.cl-identityPreviewEditButton {
+  color: #1C9CF0 !important;
+}
+
+.cl-alert {
+  border-radius: 0.75rem !important;
 }
 
 @keyframes shimmer {

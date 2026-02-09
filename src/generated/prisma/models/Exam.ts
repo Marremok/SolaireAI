@@ -45,7 +45,7 @@ export type ExamMinAggregateOutputType = {
   userId: number | null
   title: string | null
   subject: string | null
-  description: string | null
+  preferences: string | null
   date: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -60,7 +60,7 @@ export type ExamMaxAggregateOutputType = {
   userId: number | null
   title: string | null
   subject: string | null
-  description: string | null
+  preferences: string | null
   date: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -76,7 +76,7 @@ export type ExamCountAggregateOutputType = {
   title: number
   subject: number
   studyMethods: number
-  description: number
+  preferences: number
   date: number
   createdAt: number
   updatedAt: number
@@ -107,7 +107,7 @@ export type ExamMinAggregateInputType = {
   userId?: true
   title?: true
   subject?: true
-  description?: true
+  preferences?: true
   date?: true
   createdAt?: true
   updatedAt?: true
@@ -122,7 +122,7 @@ export type ExamMaxAggregateInputType = {
   userId?: true
   title?: true
   subject?: true
-  description?: true
+  preferences?: true
   date?: true
   createdAt?: true
   updatedAt?: true
@@ -138,7 +138,7 @@ export type ExamCountAggregateInputType = {
   title?: true
   subject?: true
   studyMethods?: true
-  description?: true
+  preferences?: true
   date?: true
   createdAt?: true
   updatedAt?: true
@@ -241,7 +241,7 @@ export type ExamGroupByOutputType = {
   title: string
   subject: string | null
   studyMethods: runtime.JsonValue
-  description: string | null
+  preferences: string | null
   date: Date
   createdAt: Date
   updatedAt: Date
@@ -280,7 +280,7 @@ export type ExamWhereInput = {
   title?: Prisma.StringFilter<"Exam"> | string
   subject?: Prisma.StringNullableFilter<"Exam"> | string | null
   studyMethods?: Prisma.JsonFilter<"Exam">
-  description?: Prisma.StringNullableFilter<"Exam"> | string | null
+  preferences?: Prisma.StringNullableFilter<"Exam"> | string | null
   date?: Prisma.DateTimeFilter<"Exam"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
@@ -298,7 +298,7 @@ export type ExamOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   studyMethods?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  preferences?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -319,7 +319,7 @@ export type ExamWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Exam"> | string
   subject?: Prisma.StringNullableFilter<"Exam"> | string | null
   studyMethods?: Prisma.JsonFilter<"Exam">
-  description?: Prisma.StringNullableFilter<"Exam"> | string | null
+  preferences?: Prisma.StringNullableFilter<"Exam"> | string | null
   date?: Prisma.DateTimeFilter<"Exam"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
@@ -337,7 +337,7 @@ export type ExamOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   studyMethods?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  preferences?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -361,7 +361,7 @@ export type ExamScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Exam"> | string
   subject?: Prisma.StringNullableWithAggregatesFilter<"Exam"> | string | null
   studyMethods?: Prisma.JsonWithAggregatesFilter<"Exam">
-  description?: Prisma.StringNullableWithAggregatesFilter<"Exam"> | string | null
+  preferences?: Prisma.StringNullableWithAggregatesFilter<"Exam"> | string | null
   date?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
@@ -376,7 +376,7 @@ export type ExamCreateInput = {
   title: string
   subject?: string | null
   studyMethods: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: string | null
+  preferences?: string | null
   date: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -394,7 +394,7 @@ export type ExamUncheckedCreateInput = {
   title: string
   subject?: string | null
   studyMethods: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: string | null
+  preferences?: string | null
   date: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -410,7 +410,7 @@ export type ExamUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studyMethods?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -428,7 +428,7 @@ export type ExamUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studyMethods?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -445,7 +445,7 @@ export type ExamCreateManyInput = {
   title: string
   subject?: string | null
   studyMethods: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: string | null
+  preferences?: string | null
   date: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -460,7 +460,7 @@ export type ExamUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studyMethods?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -476,7 +476,7 @@ export type ExamUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studyMethods?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -502,7 +502,7 @@ export type ExamCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   studyMethods?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  preferences?: Prisma.SortOrder
   date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -524,7 +524,7 @@ export type ExamMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   subject?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  preferences?: Prisma.SortOrder
   date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -539,7 +539,7 @@ export type ExamMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   subject?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  preferences?: Prisma.SortOrder
   date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -638,7 +638,7 @@ export type ExamCreateWithoutUserInput = {
   title: string
   subject?: string | null
   studyMethods: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: string | null
+  preferences?: string | null
   date: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -654,7 +654,7 @@ export type ExamUncheckedCreateWithoutUserInput = {
   title: string
   subject?: string | null
   studyMethods: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: string | null
+  preferences?: string | null
   date: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -700,7 +700,7 @@ export type ExamScalarWhereInput = {
   title?: Prisma.StringFilter<"Exam"> | string
   subject?: Prisma.StringNullableFilter<"Exam"> | string | null
   studyMethods?: Prisma.JsonFilter<"Exam">
-  description?: Prisma.StringNullableFilter<"Exam"> | string | null
+  preferences?: Prisma.StringNullableFilter<"Exam"> | string | null
   date?: Prisma.DateTimeFilter<"Exam"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
@@ -715,7 +715,7 @@ export type ExamCreateWithoutStudySessionsInput = {
   title: string
   subject?: string | null
   studyMethods: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: string | null
+  preferences?: string | null
   date: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -732,7 +732,7 @@ export type ExamUncheckedCreateWithoutStudySessionsInput = {
   title: string
   subject?: string | null
   studyMethods: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: string | null
+  preferences?: string | null
   date: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -763,7 +763,7 @@ export type ExamUpdateWithoutStudySessionsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studyMethods?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -780,7 +780,7 @@ export type ExamUncheckedUpdateWithoutStudySessionsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studyMethods?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -795,7 +795,7 @@ export type ExamCreateManyUserInput = {
   title: string
   subject?: string | null
   studyMethods: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: string | null
+  preferences?: string | null
   date: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -810,7 +810,7 @@ export type ExamUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studyMethods?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -826,7 +826,7 @@ export type ExamUncheckedUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studyMethods?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -842,7 +842,7 @@ export type ExamUncheckedUpdateManyWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studyMethods?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -889,7 +889,7 @@ export type ExamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   title?: boolean
   subject?: boolean
   studyMethods?: boolean
-  description?: boolean
+  preferences?: boolean
   date?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -908,7 +908,7 @@ export type ExamSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   title?: boolean
   subject?: boolean
   studyMethods?: boolean
-  description?: boolean
+  preferences?: boolean
   date?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -925,7 +925,7 @@ export type ExamSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   title?: boolean
   subject?: boolean
   studyMethods?: boolean
-  description?: boolean
+  preferences?: boolean
   date?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -942,7 +942,7 @@ export type ExamSelectScalar = {
   title?: boolean
   subject?: boolean
   studyMethods?: boolean
-  description?: boolean
+  preferences?: boolean
   date?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -952,7 +952,7 @@ export type ExamSelectScalar = {
   scheduleStatus?: boolean
 }
 
-export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "subject" | "studyMethods" | "description" | "date" | "createdAt" | "updatedAt" | "hoursPerWeek" | "preferredSessionLengthMinutes" | "status" | "scheduleStatus", ExtArgs["result"]["exam"]>
+export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "subject" | "studyMethods" | "preferences" | "date" | "createdAt" | "updatedAt" | "hoursPerWeek" | "preferredSessionLengthMinutes" | "status" | "scheduleStatus", ExtArgs["result"]["exam"]>
 export type ExamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   studySessions?: boolean | Prisma.Exam$studySessionsArgs<ExtArgs>
@@ -977,7 +977,7 @@ export type $ExamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     title: string
     subject: string | null
     studyMethods: runtime.JsonValue
-    description: string | null
+    preferences: string | null
     date: Date
     createdAt: Date
     updatedAt: Date
@@ -1415,7 +1415,7 @@ export interface ExamFieldRefs {
   readonly title: Prisma.FieldRef<"Exam", 'String'>
   readonly subject: Prisma.FieldRef<"Exam", 'String'>
   readonly studyMethods: Prisma.FieldRef<"Exam", 'Json'>
-  readonly description: Prisma.FieldRef<"Exam", 'String'>
+  readonly preferences: Prisma.FieldRef<"Exam", 'String'>
   readonly date: Prisma.FieldRef<"Exam", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Exam", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Exam", 'DateTime'>

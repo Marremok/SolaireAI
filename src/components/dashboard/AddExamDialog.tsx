@@ -53,7 +53,7 @@ const STUDY_METHODS = [
 const examSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
   subject: z.string().max(100, "Subject is too long").optional(),
-  description: z.string().max(500, "Description is too long").optional(),
+  preferences: z.string().max(500, "Description is too long").optional(),
   date: z.date(),
   hoursPerWeek: z.coerce
     .number()
@@ -93,7 +93,7 @@ export function AddExamDialog({ trigger }: AddExamDialogProps) {
     defaultValues: {
       title: "",
       subject: "",
-      description: "",
+      preferences: "",
       hoursPerWeek: undefined,
       preferredSessionLengthMinutes: 60,
       studyMethods: [],
@@ -120,7 +120,7 @@ export function AddExamDialog({ trigger }: AddExamDialogProps) {
       await createExam.mutateAsync({
         title: data.title,
         subject: data.subject || undefined,
-        description: data.description || undefined,
+        preferences: data.preferences || undefined,
         date: data.date,
         hoursPerWeek: data.hoursPerWeek || undefined,
         preferredSessionLengthMinutes: data.preferredSessionLengthMinutes,
@@ -307,19 +307,19 @@ export function AddExamDialog({ trigger }: AddExamDialogProps) {
               )}
             </div>
 
-            {/* Description */}
+            {/* Preferences */}
             <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="preferences">Preferences</Label>
               <Textarea
-                id="description"
-                placeholder="Brief description of what the exam covers..."
+                id="preferences"
+                placeholder="Optional preferences for this exam. For example: avoid Sundays, keep sessions separate, lower priority, etc."
                 className="resize-none"
                 rows={3}
-                {...register("description")}
+                {...register("preferences")}
               />
-              {errors.description && (
+              {errors.preferences && (
                 <p className="text-xs text-destructive">
-                  {errors.description.message}
+                  {errors.preferences.message}
                 </p>
               )}
             </div>

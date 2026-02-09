@@ -4,7 +4,7 @@ import { motion, Variants } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
-  FileText,
+  SlidersHorizontal,
   GraduationCap,
   Clock
 } from "lucide-react";
@@ -87,15 +87,15 @@ function ExamCard({ exam, colorClass }: { exam: ExamWithStatus; colorClass: stri
           </div>
         </div>
 
-        {/* Row 3: Description */}
-        {exam.description && (
+        {/* Row 3: Preferences */}
+        {exam.preferences && (
           <div className="space-y-1.5 pt-1">
             <div className="flex items-center gap-2 text-muted-foreground/60">
-              <FileText className="h-3 w-3" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Focus Area</span>
+              <SlidersHorizontal className="h-3 w-3" />
+              <span className="text-[10px] font-bold uppercase tracking-widest">Preferences</span>
             </div>
             <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-3">
-              {exam.description}
+              {exam.preferences}
             </p>
           </div>
         )}

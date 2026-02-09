@@ -63,19 +63,36 @@ export function useUpdateSettings() {
       const examsData = queryClient.getQueryData<ExamWithStatus[]>(["exams", "list"]);
 
       if (examsData) {
-        const generatedExams = examsData.filter(
-          (exam) => exam.scheduleStatus === "GENERATED"
+        const eligibleExams = examsData.filter(
+          (exam) =>
+            exam.scheduleStatus === "GENERATED" ||
+            exam.scheduleStatus === "FAILED"
         );
 
-        if (generatedExams.length > 0) {
+        if (eligibleExams.length > 0) {
           toast.info("Regenerating schedules", {
-            description: `Updating ${generatedExams.length} exam schedule(s) with new settings...`,
+            description: `Updating ${eligibleExams.length} exam schedule(s) with new settings...`,
           });
+
+          // Optimistically set affected exams to GENERATING with empty sessions
+          queryClient.setQueryData<ExamWithStatus[]>(
+            ["exams", "list"],
+            (old) =>
+              old?.map((e) =>
+                eligibleExams.some((ge) => ge.id === e.id)
+                  ? {
+                      ...e,
+                      scheduleStatus: "GENERATING" as const,
+                      studySessions: [],
+                    }
+                  : e
+              )
+          );
         }
 
         // Regenerate all schedules in parallel
         await Promise.all(
-          generatedExams.map(async (exam) => {
+          eligibleExams.map(async (exam) => {
             try {
               // Reset schedule status
               await regenerateSchedule(exam.id);

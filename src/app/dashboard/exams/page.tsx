@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { requireProUser } from "@/lib/auth";
+
+export const metadata: Metadata = {
+  title: "Exams",
+  robots: { index: false, follow: false },
+};
 import Navbar from "@/components/dashboard/Navbar";
 import Footer from "@/components/dashboard/Footer";
 import { ExamsList } from "@/components/dashboard/ExamsList";
@@ -33,7 +39,6 @@ export default async function ExamsPage() {
           <ExamsList />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

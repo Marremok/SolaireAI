@@ -66,17 +66,17 @@ export default function CTA() {
           </div>
         </div>
 
-        {/* --- DUAL IMAGE FOCUS --- */}
-        <div className="relative flex flex-col lg:flex-row items-end justify-center gap-8 lg:gap-12 w-full">
+        {/* --- DUAL IMAGE FOCUS WITH INTERACTIVITY --- */}
+        <div className="relative flex flex-col lg:flex-row items-end justify-center gap-8 lg:gap-12 w-full group/container">
           
           {/* Image 1: Main Dashboard (Desktop) */}
           <motion.div 
             initial={{ opacity: 0, x: -30, y: 20 }}
             whileInView={{ opacity: 1, x: 0, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative w-full lg:w-[65%] z-10"
+            className="relative w-full lg:w-[65%] z-10 group/big"
           >
-            <div className="relative aspect-1213/722 rounded-4xl md:rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.7)] bg-card/50">
+            <div className="relative aspect-1213/722 rounded-4xl md:rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.7)] bg-card/50 transition-all duration-500 group-hover/big:scale-[1.02] group-hover/big:shadow-primary/10 group-focus-within/big:shadow-primary/10 group-hover/big:border-primary/20 group-hover/container:group-hover/small:opacity-50">
               <Image 
                 src="/calendar.png" 
                 alt="Dashboard" 
@@ -86,6 +86,11 @@ export default function CTA() {
               />
               <div className="absolute inset-0 bg-linear-to-tr from-black/20 via-transparent to-white/5 pointer-events-none" />
             </div>
+            
+            {/* Label for Big Image */}
+            <div className="mt-6 text-center lg:text-left transition-all duration-500 opacity-40 group-hover/big:opacity-100 group-hover/big:-translate-y-1">
+               <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">Calendar View</p>
+            </div>
           </motion.div>
 
           {/* Image 2: Mobile App (Portrait) */}
@@ -93,18 +98,23 @@ export default function CTA() {
             initial={{ opacity: 0, x: 30, y: 40 }}
             whileInView={{ opacity: 1, x: 0, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="relative w-[50%] lg:w-[25%] z-20"
+            className="relative w-[50%] lg:w-[25%] z-20 group/small"
           >
             {/* Glow behind mobile */}
-            <div className="absolute inset-0 bg-primary/20 blur-[60px] -z-10" />
+            <div className="absolute inset-0 bg-primary/20 blur-[60px] -z-10 group-hover/small:bg-primary/40 transition-colors duration-500" />
             
-            <div className="relative aspect-504/854 rounded-4xl md:rounded-[2.5rem] overflow-hidden border-[6px] border-background shadow-[0_30px_60px_-12px_rgba(0,0,0,0.8)]">
+            <div className="relative aspect-504/854 rounded-4xl md:rounded-[2.5rem] overflow-hidden border-[6px] border-background shadow-[0_30px_60px_-12px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover/small:scale-[1.05] group-hover/small:shadow-primary/20 group-hover/container:group-hover/big:opacity-50">
               <Image 
                 src="/addexam.png" 
                 alt="Mobile App" 
                 fill 
                 className="object-cover"
               />
+            </div>
+
+            {/* Label for Small Image */}
+            <div className="mt-6 text-center transition-all duration-500 opacity-40 group-hover/small:opacity-100 group-hover/small:-translate-y-1">
+               <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">Adding Exams</p>
             </div>
           </motion.div>
         </div>

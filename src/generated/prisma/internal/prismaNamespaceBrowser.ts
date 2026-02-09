@@ -95,7 +95,7 @@ export const ExamScalarFieldEnum = {
   title: 'title',
   subject: 'subject',
   studyMethods: 'studyMethods',
-  description: 'description',
+  preferences: 'preferences',
   date: 'date',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

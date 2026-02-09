@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { requireProUser } from '@/lib/auth';
+
+export const metadata: Metadata = {
+  title: "Calendar",
+  robots: { index: false, follow: false },
+};
 import Navbar from '@/components/dashboard/Navbar';
 import Footer from '@/components/dashboard/Footer';
 import CalendarView from '@/components/dashboard/CalendarView';
@@ -29,7 +35,6 @@ export default async function CalendarPage() {
           <CalendarView />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

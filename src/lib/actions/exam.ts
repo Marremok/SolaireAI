@@ -7,7 +7,7 @@ export interface CreateExamInput {
   title: string;
   subject?: string;
   studyMethods: string[];
-  description?: string;
+  preferences?: string;
   date: Date;
   hoursPerWeek?: number;
   preferredSessionLengthMinutes: number; // NEW: Per-exam session length preference
@@ -29,7 +29,7 @@ export interface ExamWithStatus {
   title: string;
   subject: string | null;
   studyMethods: string[];
-  description: string | null;
+  preferences: string | null;
   date: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -111,7 +111,7 @@ export async function createExam(input: CreateExamInput): Promise<ExamWithStatus
       title: input.title.trim(),
       subject: input.subject?.trim() || null,
       studyMethods: input.studyMethods,
-      description: input.description?.trim() || null,
+      preferences: input.preferences?.trim() || null,
       date: examDate,
       hoursPerWeek: input.hoursPerWeek || null,
       preferredSessionLengthMinutes: input.preferredSessionLengthMinutes,

@@ -16,8 +16,36 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SolaireAI",
-  description: "AI-powered study assistant",
+  metadataBase: new URL("https://solaireai.app"),
+  title: {
+    default: "SolaireAI — AI Study Planner",
+    template: "%s | SolaireAI",
+  },
+  description:
+    "SolaireAI uses AI to generate personalized study schedules for your exams. Plan smarter, study less, score higher.",
+  keywords: [
+    "AI study planner",
+    "study schedule generator",
+    "exam preparation",
+    "AI study assistant",
+    "personalized study plan",
+    "SolaireAI",
+  ],
+  openGraph: {
+    title: "SolaireAI — AI Study Planner",
+    description:
+      "AI-powered study schedules tailored to your exams, capacity, and preferences.",
+    url: "https://solaireai.app",
+    siteName: "SolaireAI",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SolaireAI — AI Study Planner",
+    description:
+      "AI-powered study schedules tailored to your exams, capacity, and preferences.",
+  },
 };
 
 export default function RootLayout({

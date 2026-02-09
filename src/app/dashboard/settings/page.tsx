@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { requireProUser } from "@/lib/auth";
 import Navbar from "@/components/dashboard/Navbar";
 import Footer from "@/components/dashboard/Footer";
 import SettingsForm from "@/components/dashboard/settings/SettingsForm";
+
+export const metadata: Metadata = {
+  title: "Settings",
+  robots: { index: false, follow: false },
+};
 
 /**
  * Settings Page - PROTECTED by PRO subscription
@@ -20,7 +26,6 @@ export default async function SettingsPage() {
         </div>
         <SettingsForm />
       </div>
-      <Footer />
     </div>
   );
 }

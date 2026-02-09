@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { requireProUser } from '@/lib/auth';
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  robots: { index: false, follow: false },
+};
 import Navbar from '@/components/dashboard/Navbar';
 import WelcomeHeader from '@/components/dashboard/WelcomeHeader';
 import TodayBox from '@/components/dashboard/TodayBox';

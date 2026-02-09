@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "SolaireAI privacy policy. Learn how we collect, use, and protect your personal data.",
+};
 
 export default function PrivacyPolicyPage() {
   return (

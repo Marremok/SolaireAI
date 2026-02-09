@@ -3,13 +3,13 @@
 import { Button } from "@/components/ui/button"
 import { SignUpButton } from "@clerk/nextjs"
 import { motion } from "framer-motion"
-import { Sparkles, CheckCircle2, Zap, Trophy, Timer, Brain, Notebook, ArrowRight } from "lucide-react"
+import { Sparkles, CheckCircle2, Zap, Trophy, Timer, Brain, Notebook, ArrowRight, Bed } from "lucide-react"
 import { PRICING } from "@/lib/constants"
 
 export default function SingleTierPricing() {
   const features = [
     { icon: Brain, text: "AI-Generated Personalized Study Schedule" },
-    { icon: Timer, text: "Reminders Every Day" },
+    { icon: Bed, text: "Choose your rest days" },
     { icon: Notebook, text: "Set Your Preferences" },
     { icon: Zap, text: "Unlimited Active Exams" },
   ]

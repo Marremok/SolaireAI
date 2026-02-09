@@ -36,8 +36,9 @@ export async function getCurrentDbUser(): Promise<DbUser | null> {
   const { userId } = await auth();
   if (!userId) return null;
 
-  const dbUser = await prisma.user.findUnique({
+  const dbUser = await (prisma.user.findUnique as Function)({
     where: { clerkId: userId },
+    cacheStrategy: { ttl: 60 },
   });
 
   return dbUser as DbUser | null;
@@ -78,8 +79,9 @@ export async function requireProUser(shouldRedirect = true): Promise<DbUser> {
   }
 
   // Fetch DB user for app data
-  const dbUser = await prisma.user.findUnique({
+  const dbUser = await (prisma.user.findUnique as Function)({
     where: { clerkId: userId },
+    cacheStrategy: { ttl: 60 },
   });
 
   if (!dbUser) {
@@ -103,8 +105,9 @@ export async function requireAuth(): Promise<DbUser> {
     redirect("/sign-in");
   }
 
-  const dbUser = await prisma.user.findUnique({
+  const dbUser = await (prisma.user.findUnique as Function)({
     where: { clerkId: userId },
+    cacheStrategy: { ttl: 60 },
   });
 
   if (!dbUser) {
@@ -127,8 +130,9 @@ export async function getProUserOrNull(): Promise<DbUser | null> {
     return null;
   }
 
-  const dbUser = await prisma.user.findUnique({
+  const dbUser = await (prisma.user.findUnique as Function)({
     where: { clerkId: userId },
+    cacheStrategy: { ttl: 60 },
   });
 
   return dbUser as DbUser | null;

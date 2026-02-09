@@ -260,7 +260,7 @@ export async function POST(req: Request) {
         exam: {
           title: fullExam.title,
           subject: fullExam.subject,
-          description: fullExam.description,
+          preferences: fullExam.preferences,
           examDate: new Date(fullExam.date).toISOString().slice(0, 10),
           studyMethods,
           targetHoursPerWeek: fullExam.hoursPerWeek ?? 5,
@@ -281,6 +281,10 @@ RULES:
 5. NEVER exceed maxHoursPerDay for any single day.
 6. ONLY use dates from the availableDates array.
 7. Cycle through the exam's studyMethods evenly. Never repeat the same method consecutively.
+8. If the exam has non-null "preferences", treat them as SOFT constraints:
+   - Try to honor them (e.g. "avoid Sundays" means skip Sundays for THIS exam if possible)
+   - NEVER break hard constraints (maxMinutesPerDay, restDays, availableDates) to satisfy preferences
+   - If a preference conflicts with a hard constraint, silently ignore the conflicting preference
 
 OUTPUT: sessions array with { date (YYYY-MM-DD), durationMinutes (integer), method (from studyMethods) }.`;
 

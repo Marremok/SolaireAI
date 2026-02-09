@@ -183,10 +183,6 @@ export default function SettingsForm() {
                   {errors.maxHoursPerDay.message}
                 </p>
               )}
-
-              <p className="text-[11px] text-muted-foreground pt-1">
-                The AI will never schedule more than this amount in a single day, regardless of weekly goals.
-              </p>
             </div>
 
           </div>

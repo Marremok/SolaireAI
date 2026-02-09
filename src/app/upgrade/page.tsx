@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { PricingTable } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Upgrade to Pro",
+  description:
+    "Unlock AI-powered study schedules with SolaireAI Pro. Start your 7-day free trial.",
+};
 
 /**
  * Upgrade page — shows Clerk PricingTable for users without PRO subscription

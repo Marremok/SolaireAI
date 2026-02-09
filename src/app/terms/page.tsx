@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description:
+    "SolaireAI terms of service. Read our terms for using the AI study planner.",
+};
 
 export default function TermsOfServicePage() {
   return (

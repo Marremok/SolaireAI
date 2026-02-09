@@ -49,6 +49,15 @@ export function useCreateExam() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ examId: exam.id }),
       });
+
+      // Immediately mark as GENERATING in cache to trigger 2s polling
+      queryClient.setQueryData<ExamWithStatus[]>(examKeys.list(), (old) =>
+        old?.map((e) =>
+          e.id === exam.id
+            ? { ...e, scheduleStatus: "GENERATING" as const }
+            : e
+        )
+      );
     },
   });
 }
