@@ -12,13 +12,13 @@ import Footer from "@/components/dashboard/Footer";
 import About from "@/components/landing/About";
 
 export default async function Home() {
-  // const user = await currentUser()
+  const user = await currentUser()
   
   // syncing webhooks
-  // await syncUser();
+  await syncUser();
 
   // redircet auth user to dashboard
-  // if (user) redirect("/dashboard")
+  if (user) redirect("/dashboard")
 
   return (
   
