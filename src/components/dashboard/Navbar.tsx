@@ -10,7 +10,7 @@ export default function Navbar() {
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
     { name: "Exams", href: "/dashboard/exams", icon: NotebookPen },
-    { name: "Support", href: "/contact", icon: Mail},
+    { name: "Support", href: "/dashboard/contact", icon: Mail},
   ];
 
   return (

@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import { Coffee, GraduationCap, BookOpen, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
-import { getToday, addDays, getDayNameShort, formatDateShort, isWeekend, isSameDay } from "@/lib/date";
+import { getToday, addDays, getDayNameShort, getDayNameFull, formatDateShort, isSameDay } from "@/lib/date";
 import { useExams } from "@/hooks/use-exams";
+import { useUserSettings } from "@/hooks/use-settings";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ExamWithStatus, StudySessionData } from "@/lib/actions/exam";
 
@@ -25,13 +26,15 @@ interface DayData {
   day: string;
   date: string;
   dateObj: Date;
-  isWeekend: boolean;
+  isRestDay: boolean;
   exams: ExamWithStatus[];
   sessions: StudySessionData[];
 }
 
 export default function ComingDays() {
   const { data: exams, isLoading } = useExams();
+  const { data: settings } = useUserSettings();
+  const userRestDays: string[] = settings?.restDays ?? [];
 
   // Generate dynamic days based on today's date with exams and sessions
   const days = useMemo<DayData[]>(() => {
@@ -54,12 +57,12 @@ export default function ComingDays() {
         day: dayName,
         date: dateStr,
         dateObj,
-        isWeekend: isWeekend(dateObj),
+        isRestDay: userRestDays.includes(getDayNameFull(dateObj).toUpperCase()),
         exams: dayExams,
         sessions: daySessions,
       };
     });
-  }, [exams]);
+  }, [exams, userRestDays]);
 
   const container = {
     hidden: { opacity: 0 },
@@ -131,7 +134,7 @@ export default function ComingDays() {
               whileHover={{ y: -8 }}
               className={`
                 relative flex flex-col justify-between h-64 p-5 rounded-4xl border border-white/5 backdrop-blur-xl overflow-hidden group
-                ${day.isWeekend && !hasContent
+                ${day.isRestDay && !hasContent
                   ? 'bg-background/30 opacity-60 hover:opacity-100'
                   : hasContent
                   ? 'bg-card/30 hover:bg-card/50 hover:border-primary/20 hover:shadow-2xl hover:shadow-black/5'
@@ -200,19 +203,22 @@ export default function ComingDays() {
                 )}
 
                 {/* === EMPTY - WEEKEND === */}
-                {!hasContent && day.isWeekend && (
+                {!hasContent && day.isRestDay && (
                   <div className="flex flex-col items-center justify-center gap-3 opacity-50 group-hover:opacity-100 transition-opacity">
                     <div className="p-3 rounded-full bg-white/5 border border-white/5">
                       <Coffee className="h-5 w-5 text-muted-foreground" />
                     </div>
                     <span className="text-[10px] uppercase tracking-widest font-medium text-muted-foreground">
-                      Rest Day
+                      Rest day
+                    </span>
+                    <span className="text-[9px] text-muted-foreground/60 text-center">
+                      Recharge and come back stronger
                     </span>
                   </div>
                 )}
 
                 {/* === EMPTY - WEEKDAY === */}
-                {!hasContent && !day.isWeekend && (
+                {!hasContent && !day.isRestDay && (
                   <div className="flex flex-col items-center justify-center gap-2 opacity-50 group-hover:opacity-80 transition-opacity">
                     <span className="text-[10px] text-muted-foreground text-center">
                       No study scheduled

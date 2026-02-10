@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
+import { useState } from "react";
 import {
   GraduationCap,
   BookOpen,
@@ -8,6 +9,7 @@ import {
   SlidersHorizontal,
   CalendarDays,
   Trash2,
+  Pencil,
   MoreHorizontal,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -53,11 +55,12 @@ const itemVariants: Variants = {
 interface ExamCardProps {
   exam: ExamWithStatus;
   colorClass: string;
+  onEdit: () => void;
   onDelete: () => void;
   isDeleting: boolean;
 }
 
-function ExamCard({ exam, colorClass, onDelete, isDeleting }: ExamCardProps) {
+function ExamCard({ exam, colorClass, onEdit, onDelete, isDeleting }: ExamCardProps) {
   const studyMethods = Array.isArray(exam.studyMethods)
     ? exam.studyMethods.join(", ")
     : "";
@@ -97,6 +100,10 @@ function ExamCard({ exam, colorClass, onDelete, isDeleting }: ExamCardProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={onEdit}>
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={onDelete}
               disabled={isDeleting}
@@ -244,6 +251,7 @@ function EmptyState() {
 export function ExamsList() {
   const { data: exams, isLoading, error } = useExams();
   const deleteExam = useDeleteExam();
+  const [editingExam, setEditingExam] = useState<ExamWithStatus | null>(null);
 
   const upcomingExams = filterUpcomingExams(exams);
   const completedExams = filterCompletedExams(exams);
@@ -266,6 +274,15 @@ export function ExamsList() {
 
   return (
     <div className="space-y-12">
+      {/* Edit Dialog */}
+      {editingExam && (
+        <AddExamDialog
+          exam={editingExam}
+          open={!!editingExam}
+          onOpenChange={(v) => { if (!v) setEditingExam(null); }}
+        />
+      )}
+
       {/* Upcoming Exams */}
       {upcomingExams.length > 0 && (
         <section>
@@ -289,6 +306,7 @@ export function ExamsList() {
                 key={exam.id}
                 exam={exam}
                 colorClass={getExamColor(index)}
+                onEdit={() => setEditingExam(exam)}
                 onDelete={() => deleteExam.mutate(exam.id)}
                 isDeleting={deleteExam.isPending}
               />
@@ -320,6 +338,7 @@ export function ExamsList() {
                 key={exam.id}
                 exam={exam}
                 colorClass={getExamColor(index)}
+                onEdit={() => setEditingExam(exam)}
                 onDelete={() => {
                   toast.promise(
                     deleteExam.mutateAsync(exam.id),

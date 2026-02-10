@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -35,7 +35,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { useCreateExam } from "@/hooks/use-exams";
+import { useCreateExam, useUpdateExam } from "@/hooks/use-exams";
+import type { ExamWithStatus } from "@/lib/actions/exam";
 
 // Available study methods
 const STUDY_METHODS = [
@@ -73,12 +74,21 @@ type ExamFormData = z.infer<typeof examSchema>;
 
 interface AddExamDialogProps {
   trigger?: React.ReactNode;
+  exam?: ExamWithStatus;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function AddExamDialog({ trigger }: AddExamDialogProps) {
-  const [open, setOpen] = useState(false);
+export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChange }: AddExamDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const createExam = useCreateExam();
+  const updateExamMutation = useUpdateExam();
+
+  const isEditMode = !!exam;
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
+  const isPending = isEditMode ? updateExamMutation.isPending : createExam.isPending;
 
   const {
     register,
@@ -100,6 +110,21 @@ export function AddExamDialog({ trigger }: AddExamDialogProps) {
     },
   });
 
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (exam && open) {
+      reset({
+        title: exam.title,
+        subject: exam.subject ?? "",
+        preferences: exam.preferences ?? "",
+        date: new Date(exam.date),
+        hoursPerWeek: exam.hoursPerWeek ?? undefined,
+        preferredSessionLengthMinutes: exam.preferredSessionLengthMinutes,
+        studyMethods: exam.studyMethods,
+      });
+    }
+  }, [exam, open, reset]);
+
   const selectedDate = watch("date");
   const selectedMethods = watch("studyMethods") || [];
 
@@ -117,49 +142,74 @@ export function AddExamDialog({ trigger }: AddExamDialogProps) {
 
   const onSubmit = async (data: ExamFormData) => {
     try {
-      await createExam.mutateAsync({
-        title: data.title,
-        subject: data.subject || undefined,
-        preferences: data.preferences || undefined,
-        date: data.date,
-        hoursPerWeek: data.hoursPerWeek || undefined,
-        preferredSessionLengthMinutes: data.preferredSessionLengthMinutes,
-        studyMethods: data.studyMethods,
-      });
+      if (isEditMode) {
+        await updateExamMutation.mutateAsync({
+          examId: exam.id,
+          input: {
+            title: data.title,
+            subject: data.subject || undefined,
+            preferences: data.preferences || undefined,
+            date: data.date,
+            hoursPerWeek: data.hoursPerWeek || undefined,
+            preferredSessionLengthMinutes: data.preferredSessionLengthMinutes,
+            studyMethods: data.studyMethods,
+          },
+        });
 
-      toast.success("Exam created successfully", {
-        description: "Your study schedule is being generated...",
-      });
+        toast.success("Exam updated", {
+          description: "Your study schedule is being regenerated...",
+        });
+      } else {
+        await createExam.mutateAsync({
+          title: data.title,
+          subject: data.subject || undefined,
+          preferences: data.preferences || undefined,
+          date: data.date,
+          hoursPerWeek: data.hoursPerWeek || undefined,
+          preferredSessionLengthMinutes: data.preferredSessionLengthMinutes,
+          studyMethods: data.studyMethods,
+        });
+
+        toast.success("Exam created successfully", {
+          description: "Your study schedule is being generated...",
+        });
+      }
 
       reset();
       setOpen(false);
     } catch (error) {
-      console.error("Failed to create exam:", error);
-      toast.error("Failed to create exam", {
+      console.error(`Failed to ${isEditMode ? "update" : "create"} exam:`, error);
+      toast.error(`Failed to ${isEditMode ? "update" : "create"} exam`, {
         description: error instanceof Error ? error.message : "Please try again",
       });
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button
-            variant="outline"
-            size="sm"
-            className="rounded-full border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary gap-1.5 px-4 h-9"
-          >
-            <Plus className="h-4 w-4" /> Add Exam
-          </Button>
-        )}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={(v) => { if (!v) reset(); setOpen(v); }}>
+      {!isEditMode && (
+        <DialogTrigger asChild>
+          {trigger || (
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary gap-1.5 px-4 h-9"
+            >
+              <Plus className="h-4 w-4" /> Add Exam
+            </Button>
+          )}
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-125 bg-background/95 backdrop-blur-xl border-border/50">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle className="text-xl">Add New Exam</DialogTitle>
+            <DialogTitle className="text-xl">
+              {isEditMode ? "Edit Exam" : "Add New Exam"}
+            </DialogTitle>
             <DialogDescription>
-              Create a new exam to track and plan your study sessions.
+              {isEditMode
+                ? "Update your exam details. Your schedule will be regenerated."
+                : "Create a new exam to track and plan your study sessions."}
             </DialogDescription>
           </DialogHeader>
 
@@ -336,14 +386,14 @@ export function AddExamDialog({ trigger }: AddExamDialogProps) {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={createExam.isPending}>
-              {createExam.isPending ? (
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
+                  {isEditMode ? "Saving..." : "Creating..."}
                 </>
               ) : (
-                "Create Exam"
+                isEditMode ? "Save Changes" : "Create Exam"
               )}
             </Button>
           </DialogFooter>

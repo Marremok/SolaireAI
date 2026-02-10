@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getExamsByUserId, createExam, deleteExam, type CreateExamInput, type ExamWithStatus } from "@/lib/actions/exam";
+import { getExamsByUserId, createExam, updateExam, deleteExam, type CreateExamInput, type UpdateExamInput, type ExamWithStatus } from "@/lib/actions/exam";
 
 // Query keys for cache management
 export const examKeys = {
@@ -51,6 +51,40 @@ export function useCreateExam() {
       });
 
       // Immediately mark as GENERATING in cache to trigger 2s polling
+      queryClient.setQueryData<ExamWithStatus[]>(examKeys.list(), (old) =>
+        old?.map((e) =>
+          e.id === exam.id
+            ? { ...e, scheduleStatus: "GENERATING" as const }
+            : e
+        )
+      );
+    },
+  });
+}
+
+/**
+ * Hook to update an existing exam
+ * Deletes old sessions, regenerates schedule automatically
+ */
+export function useUpdateExam() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ examId, input }: { examId: number; input: UpdateExamInput }) => {
+      const exam = await updateExam(examId, input);
+      return exam;
+    },
+    onSuccess: async (exam) => {
+      await queryClient.invalidateQueries({ queryKey: examKeys.list() });
+
+      // Fire-and-forget schedule regeneration
+      fetch("/api/schedule", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ examId: exam.id }),
+      });
+
+      // Optimistic GENERATING to trigger polling
       queryClient.setQueryData<ExamWithStatus[]>(examKeys.list(), (old) =>
         old?.map((e) =>
           e.id === exam.id

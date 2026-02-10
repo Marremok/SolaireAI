@@ -1,17 +1,20 @@
 "use client"
 
+import { useState } from "react";
 import { motion, Variants } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
   SlidersHorizontal,
   GraduationCap,
-  Clock
+  Clock,
+  Pencil,
 } from "lucide-react";
 import Link from "next/link";
 
 import { useExams, filterUpcomingExams } from "@/hooks/use-exams";
 import { AddExamDialog } from "./AddExamDialog";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ExamWithStatus } from "@/lib/actions/exam";
 
@@ -36,7 +39,7 @@ const itemVariants: Variants = {
   }
 };
 
-function ExamCard({ exam, colorClass }: { exam: ExamWithStatus; colorClass: string }) {
+function ExamCard({ exam, colorClass, onEdit }: { exam: ExamWithStatus; colorClass: string; onEdit: () => void }) {
   const studyMethods = Array.isArray(exam.studyMethods)
     ? exam.studyMethods.slice(0, 2).join(", ")
     : "";
@@ -50,14 +53,24 @@ function ExamCard({ exam, colorClass }: { exam: ExamWithStatus; colorClass: stri
       className={`group relative flex flex-col p-5 rounded-4xl border ${colorClass} bg-background/40 transition-all duration-300 min-h-80`}
     >
       {/* Exam Title & Icon */}
-      <div className="mb-6">
-        <div className="inline-flex p-2 rounded-xl bg-primary/10 text-primary mb-3">
-          <GraduationCap className="h-5 w-5" />
-        </div>
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <div className="inline-flex p-2 rounded-xl bg-primary/10 text-primary mb-3">
+            <GraduationCap className="h-5 w-5" />
+          </div>
         <h4 className="text-lg font-bold tracking-tight line-clamp-1">{exam.title}</h4>
         {exam.subject && (
           <p className="text-xs text-muted-foreground mt-1">{exam.subject}</p>
         )}
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onEdit}
+          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <Pencil className="h-3.5 w-3.5" />
+        </Button>
       </div>
 
       {/* Data Rows */}
@@ -155,12 +168,21 @@ function EmptyState() {
 export default function ExamManagement() {
   const { data: exams, isLoading } = useExams();
   const upcomingExams = filterUpcomingExams(exams);
+  const [editingExam, setEditingExam] = useState<ExamWithStatus | null>(null);
 
   // Show max 4 exams on dashboard
   const displayExams = upcomingExams.slice(0, 4);
 
   return (
     <div className="w-full mt-12">
+      {/* Edit Dialog */}
+      {editingExam && (
+        <AddExamDialog
+          exam={editingExam}
+          open={!!editingExam}
+          onOpenChange={(v) => { if (!v) setEditingExam(null); }}
+        />
+      )}
       {/* --- HEADER SECTION --- */}
       <div className="flex items-center justify-between mb-6 px-2">
         <div className="flex items-center gap-4">
@@ -200,6 +222,7 @@ export default function ExamManagement() {
                 key={exam.id}
                 exam={exam}
                 colorClass={getExamColor(index)}
+                onEdit={() => setEditingExam(exam)}
               />
             ))}
           </motion.div>

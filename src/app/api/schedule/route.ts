@@ -44,7 +44,7 @@ function getFriendlyErrorMessage(error: Error): string {
     return "Cannot create schedule: No study days available. Try reducing rest days or moving exam date further out.";
   }
   if (msg.includes("capacity too low")) {
-    return "Cannot create schedule: Your weekly study capacity is too low. Go to Settings to increase max hours.";
+    return "Cannot create schedule: Daily capacity is too low for the preferred session length.";
   }
   if (msg.includes("all sessions filtered")) {
     return "Cannot create schedule: Unable to fit sessions within daily capacity limits. Try increasing study hours or reducing exam targets.";
@@ -65,42 +65,20 @@ function deriveConstraints(
   exam: {
     date: Date;
     hoursPerWeek: number | null;
-    preferredSessionLengthMinutes: number; // FROM EXAM now
+    preferredSessionLengthMinutes: number;
   },
-  user: {
-    maxHoursPerWeek: number;
-    maxHoursPerDay: number;
-    restDays: string[];
-  },
+  restDays: string[],
   otherSessions: { date: Date; duration: number }[]
 ) {
-  const maxHoursPerWeek = user.maxHoursPerWeek;
-
   // Calculate available days per week (exclude rest days)
-  const availableDaysPerWeek = 7 - user.restDays.length;
+  const availableDaysPerWeek = 7 - restDays.length;
 
-  // Edge case: No available study days
   if (availableDaysPerWeek === 0) {
     throw new Error("No available study days - all days marked as rest days");
   }
 
-  // Calculate max minutes per day based on available days, capped by user's daily limit
-  const calculatedMax = Math.floor(
-    (maxHoursPerWeek * 60) / Math.max(availableDaysPerWeek, 1)
-  );
-  const maxMinutesPerDay = Math.min(calculatedMax, Math.floor(user.maxHoursPerDay * 60));
-
-  // Edge case: Capacity too low
-  if (maxHoursPerWeek < 0.5) {
-    throw new Error("Study capacity too low - increase maxHoursPerWeek in Settings");
-  }
-
-  const minRequiredMinutes = 30;
-  if (maxMinutesPerDay < minRequiredMinutes) {
-    throw new Error(
-      `Daily capacity too low (${maxMinutesPerDay} min/day). Need at least ${minRequiredMinutes} minutes.`
-    );
-  }
+  // Exam-driven daily cap: 2x preferred session length, max 4 hours
+  const maxMinutesPerDay = Math.min(exam.preferredSessionLengthMinutes * 2, 240);
 
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
@@ -108,7 +86,6 @@ function deriveConstraints(
   const examDate = new Date(exam.date);
   examDate.setUTCHours(0, 0, 0, 0);
 
-  // Helper to get day name from date
   const getDayName = (date: Date): string => {
     const days = [
       "SUNDAY",
@@ -127,13 +104,12 @@ function deriveConstraints(
   const current = new Date(today);
   while (current < examDate) {
     const dayName = getDayName(current);
-    if (!user.restDays.includes(dayName)) {
+    if (!restDays.includes(dayName)) {
       availableDates.push(current.toISOString().slice(0, 10));
     }
     current.setUTCDate(current.getUTCDate() + 1);
   }
 
-  // Edge case: No dates available after filtering
   if (availableDates.length === 0) {
     throw new Error("No available dates between today and exam (check rest days)");
   }
@@ -146,7 +122,7 @@ function deriveConstraints(
       (existingMinutesByDate[dateKey] ?? 0) + session.duration;
   }
 
-  // NEW: Mathematical distribution calculation
+  // Mathematical distribution calculation
   const targetHoursPerWeek = exam.hoursPerWeek ?? 5;
   const sessionsPerWeek =
     targetHoursPerWeek / (exam.preferredSessionLengthMinutes / 60);
@@ -158,10 +134,9 @@ function deriveConstraints(
     availableDates,
     existingMinutesByDate,
     preferredSessionLength: exam.preferredSessionLengthMinutes,
-    sessionsPerWeek, // NEW
-    totalSessionsNeeded, // NEW
-    restDays: user.restDays,
-    // REMOVED: studyIntensity
+    sessionsPerWeek,
+    totalSessionsNeeded,
+    restDays,
   };
 }
 
@@ -228,7 +203,7 @@ export async function POST(req: Request) {
 
       const constraints = deriveConstraints(
         fullExam,
-        fullExam.user,
+        fullExam.user.restDays,
         otherSessions
       );
 
@@ -265,10 +240,7 @@ export async function POST(req: Request) {
           studyMethods,
           targetHoursPerWeek: fullExam.hoursPerWeek ?? 5,
         },
-        constraints: {
-          ...constraints,
-          maxHoursPerDay: fullExam.user.maxHoursPerDay,
-        },
+        constraints,
       };
 
       const systemPrompt = `You are a study schedule optimizer. Create evenly-distributed study sessions.
@@ -278,10 +250,9 @@ RULES:
 2. Space sessions EVENLY across availableDates using interval: floor(availableDates.length / totalSessionsNeeded).
 3. Each session duration: preferredSessionLength minutes (±15 min flexibility). Integer between 30-120.
 4. NEVER exceed maxMinutesPerDay on any date. Account for existingMinutesByDate. Skip dates with < 30 min remaining capacity.
-5. NEVER exceed maxHoursPerDay for any single day.
-6. ONLY use dates from the availableDates array.
-7. Cycle through the exam's studyMethods evenly. Never repeat the same method consecutively.
-8. If the exam has non-null "preferences", treat them as SOFT constraints:
+5. ONLY use dates from the availableDates array.
+6. Cycle through the exam's studyMethods evenly. Never repeat the same method consecutively.
+7. If the exam has non-null "preferences", treat them as SOFT constraints:
    - Try to honor them (e.g. "avoid Sundays" means skip Sundays for THIS exam if possible)
    - NEVER break hard constraints (maxMinutesPerDay, restDays, availableDates) to satisfy preferences
    - If a preference conflicts with a hard constraint, silently ignore the conflicting preference

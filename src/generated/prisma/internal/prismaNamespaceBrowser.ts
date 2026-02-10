@@ -81,8 +81,6 @@ export const UserScalarFieldEnum = {
   phone: 'phone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  maxHoursPerWeek: 'maxHoursPerWeek',
-  maxHoursPerDay: 'maxHoursPerDay',
   restDays: 'restDays'
 } as const
 

@@ -17,8 +17,6 @@ export async function getUserSettings(): Promise<UserSettingsInput | null> {
   const settings = await prisma.user.findUnique({
     where: { id: dbUser.id },
     select: {
-      maxHoursPerWeek: true,
-      maxHoursPerDay: true,
       restDays: true,
     },
   });
@@ -43,13 +41,9 @@ export async function updateUserSettings(
   const updatedUser = await prisma.user.update({
     where: { id: dbUser.id },
     data: {
-      maxHoursPerWeek: validated.maxHoursPerWeek,
-      maxHoursPerDay: validated.maxHoursPerDay,
       restDays: validated.restDays,
     },
     select: {
-      maxHoursPerWeek: true,
-      maxHoursPerDay: true,
       restDays: true,
     },
   });

@@ -14,8 +14,6 @@ export type DbUser = {
   phone: string | null;
   createdAt: Date;
   updatedAt: Date;
-  maxHoursPerWeek: number;
-  maxHoursPerDay: number;
   restDays: string[];
 };
 
@@ -53,7 +51,7 @@ export async function getCurrentDbUser(): Promise<DbUser | null> {
  * - All dashboard page components
  *
  * Uses Clerk Billing has({ plan: "pro" }) for subscription check,
- * then fetches DB user for app data (maxHoursPerWeek, restDays, etc.)
+ * then fetches DB user for app data (restDays, etc.)
  *
  * @param shouldRedirect - If true, redirects to /upgrade on failure. If false, throws error.
  * @returns The authenticated PRO user

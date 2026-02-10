@@ -10,7 +10,17 @@ export interface CreateExamInput {
   preferences?: string;
   date: Date;
   hoursPerWeek?: number;
-  preferredSessionLengthMinutes: number; // NEW: Per-exam session length preference
+  preferredSessionLengthMinutes: number;
+}
+
+export interface UpdateExamInput {
+  title?: string;
+  subject?: string;
+  studyMethods?: string[];
+  preferences?: string;
+  date?: Date;
+  hoursPerWeek?: number;
+  preferredSessionLengthMinutes?: number;
 }
 
 export interface StudySessionData {
@@ -149,6 +159,50 @@ export async function deleteExam(examId: number): Promise<void> {
   await prisma.exam.delete({
     where: { id: examId },
   });
+}
+
+/**
+ * Update an existing exam (only if owned by the current PRO user)
+ * Deletes old sessions and resets schedule so it regenerates.
+ * PROTECTED: Requires active PRO subscription
+ */
+export async function updateExam(
+  examId: number,
+  input: UpdateExamInput
+): Promise<ExamWithStatus> {
+  const dbUser = await requireProUser();
+
+  const exam = await prisma.exam.findUnique({ where: { id: examId } });
+  if (!exam) throw new Error("Exam not found");
+  if (exam.userId !== dbUser.id) throw new Error("Unauthorized");
+
+  // Build update data from provided fields
+  const data: Record<string, unknown> = {};
+  if (input.title !== undefined) data.title = input.title.trim();
+  if (input.subject !== undefined) data.subject = input.subject.trim() || null;
+  if (input.studyMethods !== undefined) data.studyMethods = input.studyMethods;
+  if (input.preferences !== undefined) data.preferences = input.preferences.trim() || null;
+  if (input.date !== undefined) data.date = new Date(input.date);
+  if (input.hoursPerWeek !== undefined) data.hoursPerWeek = input.hoursPerWeek || null;
+  if (input.preferredSessionLengthMinutes !== undefined) {
+    data.preferredSessionLengthMinutes = input.preferredSessionLengthMinutes;
+  }
+
+  // Delete old sessions + update exam + reset schedule in one transaction
+  const [, updated] = await prisma.$transaction([
+    prisma.studySession.deleteMany({ where: { examId } }),
+    prisma.exam.update({
+      where: { id: examId },
+      data: { ...data, scheduleStatus: "NONE" },
+    }),
+  ]);
+
+  return {
+    ...updated,
+    studyMethods: updated.studyMethods as string[],
+    preferredSessionLengthMinutes: (updated as any).preferredSessionLengthMinutes ?? 60,
+    studySessions: [],
+  };
 }
 
 /**
