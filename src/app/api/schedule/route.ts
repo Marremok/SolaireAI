@@ -122,12 +122,16 @@ function deriveConstraints(
       (existingMinutesByDate[dateKey] ?? 0) + session.duration;
   }
 
-  // Mathematical distribution calculation
+  // Deterministic distribution calculation
   const targetHoursPerWeek = exam.hoursPerWeek ?? 5;
-  const sessionsPerWeek =
-    targetHoursPerWeek / (exam.preferredSessionLengthMinutes / 60);
+  const sessionsPerWeek = Math.ceil(
+    targetHoursPerWeek / (exam.preferredSessionLengthMinutes / 60)
+  );
   const weeksUntilExam = availableDates.length / availableDaysPerWeek;
-  const totalSessionsNeeded = Math.floor(weeksUntilExam * sessionsPerWeek);
+  const totalSessionsNeeded = Math.min(
+    Math.max(1, Math.round(weeksUntilExam * sessionsPerWeek)),
+    availableDates.length // cap: max 1 session per available day
+  );
 
   return {
     maxMinutesPerDay,
@@ -138,6 +142,137 @@ function deriveConstraints(
     totalSessionsNeeded,
     restDays,
   };
+}
+
+/**
+ * Deterministic schedule generator — used as fallback when AI output
+ * fails validation, or could be used as primary generator.
+ * Groups available dates into 7-day weeks, picks evenly-spaced dates
+ * per week, assigns methods in round-robin order.
+ */
+function generateDeterministicSchedule(
+  constraints: {
+    availableDates: string[];
+    totalSessionsNeeded: number;
+    preferredSessionLength: number;
+    sessionsPerWeek: number;
+    maxMinutesPerDay: number;
+    existingMinutesByDate: Record<string, number>;
+  },
+  studyMethods: string[]
+): { date: string; durationMinutes: number; method: string }[] {
+  const {
+    availableDates,
+    totalSessionsNeeded,
+    preferredSessionLength,
+    sessionsPerWeek,
+    maxMinutesPerDay,
+    existingMinutesByDate,
+  } = constraints;
+
+  if (availableDates.length === 0 || totalSessionsNeeded <= 0) return [];
+
+  const sessions: { date: string; durationMinutes: number; method: string }[] =
+    [];
+  let methodIndex = 0;
+  const dailyUsed = { ...existingMinutesByDate };
+
+  // Group dates into 7-day windows (weeks)
+  const weeks: string[][] = [];
+  let weekStart = new Date(availableDates[0] + "T00:00:00Z");
+  let currentWeek: string[] = [];
+
+  for (const dateStr of availableDates) {
+    const d = new Date(dateStr + "T00:00:00Z");
+    const daysDiff =
+      (d.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysDiff >= 7) {
+      if (currentWeek.length > 0) weeks.push(currentWeek);
+      currentWeek = [];
+      weekStart = d;
+    }
+    currentWeek.push(dateStr);
+  }
+  if (currentWeek.length > 0) weeks.push(currentWeek);
+
+  // For each week, pick evenly-spaced dates with enough capacity
+  for (const week of weeks) {
+    if (sessions.length >= totalSessionsNeeded) break;
+
+    const sessionsThisWeek = Math.min(
+      sessionsPerWeek,
+      totalSessionsNeeded - sessions.length
+    );
+
+    // Filter to dates with enough remaining capacity
+    const viable = week.filter((d) => {
+      const used = dailyUsed[d] ?? 0;
+      return used + preferredSessionLength <= maxMinutesPerDay;
+    });
+
+    if (viable.length === 0) continue;
+
+    const pick = Math.min(sessionsThisWeek, viable.length);
+    const interval = viable.length / pick;
+
+    for (let i = 0; i < pick; i++) {
+      const idx = Math.floor(i * interval);
+      const date = viable[idx];
+      sessions.push({
+        date,
+        durationMinutes: preferredSessionLength,
+        method: studyMethods[methodIndex % studyMethods.length],
+      });
+      dailyUsed[date] = (dailyUsed[date] ?? 0) + preferredSessionLength;
+      methodIndex++;
+    }
+  }
+
+  return sessions;
+}
+
+/**
+ * Strictly validate AI output against locked constraints.
+ * Returns the sessions if valid, or null if any hard rule is violated.
+ */
+function strictValidateAIOutput(
+  aiSessions: { date: string; durationMinutes: number; method: string }[],
+  constraints: {
+    totalSessionsNeeded: number;
+    preferredSessionLength: number;
+    maxMinutesPerDay: number;
+    availableDates: string[];
+    existingMinutesByDate: Record<string, number>;
+  },
+  studyMethods: string[]
+): { date: string; durationMinutes: number; method: string }[] | null {
+  const availableDatesSet = new Set(constraints.availableDates);
+
+  // Rule 1: Exact session count
+  if (aiSessions.length !== constraints.totalSessionsNeeded) return null;
+
+  // Rule 2: Every duration must match exactly
+  if (
+    aiSessions.some(
+      (s) => s.durationMinutes !== constraints.preferredSessionLength
+    )
+  )
+    return null;
+
+  // Rule 3-5: All dates valid, methods valid, capacity respected
+  const dailyUsed = { ...constraints.existingMinutesByDate };
+  for (const session of aiSessions) {
+    if (!availableDatesSet.has(session.date)) return null;
+    if (!studyMethods.includes(session.method)) return null;
+
+    const currentUsed = dailyUsed[session.date] ?? 0;
+    if (currentUsed + session.durationMinutes > constraints.maxMinutesPerDay)
+      return null;
+
+    dailyUsed[session.date] = currentUsed + session.durationMinutes;
+  }
+
+  return aiSessions;
 }
 
 export async function POST(req: Request) {
@@ -231,111 +366,158 @@ export async function POST(req: Request) {
       }
 
       const studyMethods = fullExam.studyMethods as string[];
+      const examDateStr = new Date(fullExam.date)
+        .toISOString()
+        .slice(0, 10);
+
+      // ── LOCKED VALUES (pre-computed, non-negotiable) ──────────
+      const locked = {
+        sessionCount: constraints.totalSessionsNeeded,
+        sessionDuration: constraints.preferredSessionLength,
+        sessionsPerWeek: constraints.sessionsPerWeek,
+      };
+
       const claudeInput = {
+        locked,
         exam: {
           title: fullExam.title,
           subject: fullExam.subject,
           preferences: fullExam.preferences,
-          examDate: new Date(fullExam.date).toISOString().slice(0, 10),
+          examDate: examDateStr,
           studyMethods,
-          targetHoursPerWeek: fullExam.hoursPerWeek ?? 5,
         },
-        constraints,
+        constraints: {
+          maxMinutesPerDay: constraints.maxMinutesPerDay,
+          availableDates: constraints.availableDates,
+          existingMinutesByDate: constraints.existingMinutesByDate,
+          restDays: constraints.restDays,
+        },
       };
 
-      const systemPrompt = `You are a study schedule optimizer. Create evenly-distributed study sessions.
+      const systemPrompt = `You are a deterministic study schedule placer. You do NOT decide how many sessions or how long they are — those are pre-computed and LOCKED. Your ONLY job is to pick WHICH dates from availableDates to place sessions on, and assign study methods.
 
-RULES:
-1. Create exactly totalSessionsNeeded sessions (or as close as capacity allows). If totalSessionsNeeded exceeds available dates, create one session per available date.
-2. Space sessions EVENLY across availableDates using interval: floor(availableDates.length / totalSessionsNeeded).
-3. Each session duration: preferredSessionLength minutes (±15 min flexibility). Integer between 30-120.
-4. NEVER exceed maxMinutesPerDay on any date. Account for existingMinutesByDate. Skip dates with < 30 min remaining capacity.
-5. ONLY use dates from the availableDates array.
-6. Cycle through the exam's studyMethods evenly. Never repeat the same method consecutively.
-7. If the exam has non-null "preferences", treat them as SOFT constraints:
-   - Try to honor them (e.g. "avoid Sundays" means skip Sundays for THIS exam if possible)
-   - NEVER break hard constraints (maxMinutesPerDay, restDays, availableDates) to satisfy preferences
-   - If a preference conflicts with a hard constraint, silently ignore the conflicting preference
+LOCKED VALUES (non-negotiable — do NOT change these under any circumstance):
+- sessionCount: output EXACTLY this many sessions
+- sessionDuration: every session MUST have exactly this duration in minutes
+- sessionsPerWeek: target sessions per 7-day window
 
-OUTPUT: sessions array with { date (YYYY-MM-DD), durationMinutes (integer), method (from studyMethods) }.`;
+HARD RULES (priority order — never violate):
+1. Output EXACTLY locked.sessionCount sessions. Not more, not less.
+2. Every session durationMinutes MUST equal locked.sessionDuration exactly.
+3. ONLY use dates from constraints.availableDates.
+4. NEVER place a session on a date where existingMinutesByDate[date] + sessionDuration > maxMinutesPerDay.
+5. Distribute sessions EVENLY across weeks. Each 7-day window should have ~sessionsPerWeek sessions.
+6. Cycle through exam.studyMethods in order, repeating from the start. Do not repeat the same method consecutively if there are multiple methods.
 
+SOFT RULES (follow if possible, NEVER break hard rules 1-6 to satisfy these):
+7. If exam.preferences is non-null, use it to influence WHICH dates you pick within each week.
+8. Preferences may NEVER reduce session count, change duration, or skip entire weeks.
 
-      const message = await anthropic.messages.create(
-        {
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 4096,
-          system: systemPrompt,
-          tools: [studyScheduleToolSchema],
-          tool_choice: { type: "tool", name: "create_study_schedule" },
-          messages: [
-            {
-              role: "user",
-              content: JSON.stringify(claudeInput, null, 2),
-            },
-          ],
-        },
-        { signal: AbortSignal.timeout(30000) }
-      );
+DATE SELECTION ALGORITHM:
+- Group availableDates into 7-day windows starting from the first date.
+- For each week, select sessionsPerWeek dates, spaced as evenly as possible within the week.
+- If a week has fewer viable dates than sessionsPerWeek, use all viable dates in that week.
+- A date is "viable" if existingMinutesByDate[date] + sessionDuration <= maxMinutesPerDay.
 
-      const toolUseBlock = message.content.find(
-        (block) => block.type === "tool_use" && block.name === "create_study_schedule"
-      );
+EXAMPLE:
+locked: { sessionCount: 8, sessionDuration: 90, sessionsPerWeek: 2 }
+→ Output exactly 8 sessions, each exactly 90 minutes, ~2 per week across 4 weeks.
 
-      if (!toolUseBlock || toolUseBlock.type !== "tool_use") {
-        throw new Error("Claude returned no tool use content");
-      }
+OUTPUT FORMAT: sessions array with objects { date: "YYYY-MM-DD", durationMinutes: <integer>, method: <string from studyMethods> }.`;
 
-      const parsed = StudyScheduleSchema.parse(toolUseBlock.input);
-
-      // Validate sessions — sort by date ASC (capacity tracking is order-dependent)
-      const availableDatesSet = new Set(constraints.availableDates);
-      const dailyUsed = { ...constraints.existingMinutesByDate };
-      const sortedSessions = [...parsed.sessions].sort((a, b) =>
-        a.date.localeCompare(b.date)
-      );
-
-      const validatedSessions: {
+      // ── AI CALL ───────────────────────────────────────────────
+      let finalSessions: {
         date: string;
         durationMinutes: number;
         method: string;
-      }[] = [];
+      }[];
 
-      for (const session of sortedSessions) {
-        if (!availableDatesSet.has(session.date)) continue;
-        if (!studyMethods.includes(session.method)) continue;
-        if (session.durationMinutes <= 0 || session.durationMinutes > 120)
-          continue;
+      try {
+        const message = await anthropic.messages.create(
+          {
+            model: "claude-haiku-4-5-20251001",
+            max_tokens: 4096,
+            system: systemPrompt,
+            tools: [studyScheduleToolSchema],
+            tool_choice: { type: "tool", name: "create_study_schedule" },
+            messages: [
+              {
+                role: "user",
+                content: JSON.stringify(claudeInput, null, 2),
+              },
+            ],
+          },
+          { signal: AbortSignal.timeout(30000) }
+        );
 
-        const currentUsed = dailyUsed[session.date] ?? 0;
-        if (currentUsed + session.durationMinutes > constraints.maxMinutesPerDay)
-          continue;
+        const toolUseBlock = message.content.find(
+          (block) =>
+            block.type === "tool_use" &&
+            block.name === "create_study_schedule"
+        );
 
-        validatedSessions.push(session);
-        dailyUsed[session.date] = currentUsed + session.durationMinutes;
+        if (!toolUseBlock || toolUseBlock.type !== "tool_use") {
+          throw new Error("AI returned no tool use content");
+        }
+
+        const parsed = StudyScheduleSchema.parse(toolUseBlock.input);
+        const sorted = [...parsed.sessions].sort((a, b) =>
+          a.date.localeCompare(b.date)
+        );
+
+        // ── STRICT POST-VALIDATION ──────────────────────────────
+        const validated = strictValidateAIOutput(
+          sorted,
+          constraints,
+          studyMethods
+        );
+
+        if (validated) {
+          finalSessions = validated;
+        } else {
+          console.warn(
+            `AI output failed strict validation for exam ${examId} — using deterministic fallback`
+          );
+          finalSessions = generateDeterministicSchedule(
+            constraints,
+            studyMethods
+          );
+        }
+      } catch (aiError) {
+        // AI call failed entirely — use deterministic fallback
+        console.warn(
+          `AI call failed for exam ${examId} — using deterministic fallback:`,
+          aiError
+        );
+        finalSessions = generateDeterministicSchedule(
+          constraints,
+          studyMethods
+        );
       }
 
-      if (validatedSessions.length === 0) {
+      if (finalSessions.length === 0) {
         await prisma.exam.update({
           where: { id: examId },
           data: { scheduleStatus: "FAILED" },
         });
         return NextResponse.json({
           success: false,
-          error: "All sessions filtered out during validation",
+          error:
+            "Cannot create schedule: no viable dates with enough capacity.",
         });
       }
 
-      // Clear old sessions for this exam, then insert new ones
+      // ── PERSIST ─────────────────────────────────────────────
       await prisma.studySession.deleteMany({ where: { examId } });
 
       await prisma.studySession.createMany({
-        data: validatedSessions.map((s) => ({
+        data: finalSessions.map((s) => ({
           examId,
           userId: dbUser.id,
           date: new Date(s.date + "T00:00:00Z"),
           duration: s.durationMinutes,
           method: s.method,
-          topic: `Prep for ${fullExam.title} — ${s.method}`, // NEW: Include method in topic
+          topic: `Prep for ${fullExam.title} — ${s.method}`,
         })),
       });
 
