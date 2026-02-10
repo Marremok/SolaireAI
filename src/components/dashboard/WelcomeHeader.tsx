@@ -31,9 +31,9 @@ export default function WelcomeHeader({ firstName }: WelcomeHeaderProps) {
       daysToNearest = diffDays > 0 ? String(diffDays) : "Today";
     }
 
-    // Calculate total study hours per week from all upcoming exams
-    const totalHoursPerWeek = upcomingExams.reduce(
-      (sum, exam) => sum + (exam.hoursPerWeek || 0),
+    // Calculate total sessions per week from all upcoming exams
+    const totalSessionsPerWeek = upcomingExams.reduce(
+      (sum, exam) => sum + (exam.targetSessionsPerWeek || 0),
       0
     );
 
@@ -51,8 +51,8 @@ export default function WelcomeHeader({ firstName }: WelcomeHeaderProps) {
         color: "text-primary"
       },
       {
-        label: "Hours/Week",
-        value: totalHoursPerWeek > 0 ? `${totalHoursPerWeek}h` : "-",
+        label: "Sessions/Week",
+        value: totalSessionsPerWeek > 0 ? `${totalSessionsPerWeek}` : "-",
         icon: Clock,
         color: "text-emerald-500"
       },

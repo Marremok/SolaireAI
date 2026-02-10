@@ -45,8 +45,8 @@ model Exam {
   date          DateTime
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  hoursPerWeek  Float?
-  preferredSessionLengthMinutes Int @default(60)
+  targetSessionsPerWeek Int
+  sessionLengthMinutes  Int      @default(60)
   status        ExamStatus  @default(UPCOMING)
 
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)

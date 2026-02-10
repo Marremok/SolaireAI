@@ -9,8 +9,8 @@ export interface CreateExamInput {
   studyMethods: string[];
   preferences?: string;
   date: Date;
-  hoursPerWeek?: number;
-  preferredSessionLengthMinutes: number;
+  targetSessionsPerWeek: number;
+  sessionLengthMinutes: number;
 }
 
 export interface UpdateExamInput {
@@ -19,8 +19,8 @@ export interface UpdateExamInput {
   studyMethods?: string[];
   preferences?: string;
   date?: Date;
-  hoursPerWeek?: number;
-  preferredSessionLengthMinutes?: number;
+  targetSessionsPerWeek?: number;
+  sessionLengthMinutes?: number;
 }
 
 export interface StudySessionData {
@@ -43,8 +43,8 @@ export interface ExamWithStatus {
   date: Date;
   createdAt: Date;
   updatedAt: Date;
-  hoursPerWeek: number | null;
-  preferredSessionLengthMinutes: number; // NEW: Per-exam session length preference
+  targetSessionsPerWeek: number;
+  sessionLengthMinutes: number;
   status: "UPCOMING" | "COMPLETED";
   scheduleStatus: "NONE" | "GENERATING" | "GENERATED" | "FAILED";
   studySessions: StudySessionData[];
@@ -66,7 +66,6 @@ export async function getExamsByUserId(): Promise<ExamWithStatus[]> {
   return exams.map((exam) => ({
     ...exam,
     studyMethods: exam.studyMethods as string[],
-    preferredSessionLengthMinutes: (exam as any).preferredSessionLengthMinutes ?? 60,
     studySessions: exam.studySessions.map((s) => ({
       id: s.id,
       examId: s.examId,
@@ -95,11 +94,16 @@ export async function createExam(input: CreateExamInput): Promise<ExamWithStatus
     throw new Error("Exam date is required");
   }
 
-  // Validate preferredSessionLengthMinutes
+  // Validate targetSessionsPerWeek
+  if (!input.targetSessionsPerWeek || input.targetSessionsPerWeek < 1) {
+    throw new Error("targetSessionsPerWeek must be at least 1");
+  }
+
+  // Validate sessionLengthMinutes
   const validSessionLengths = [30, 45, 60, 90, 120];
   if (
-    !input.preferredSessionLengthMinutes ||
-    !validSessionLengths.includes(input.preferredSessionLengthMinutes)
+    !input.sessionLengthMinutes ||
+    !validSessionLengths.includes(input.sessionLengthMinutes)
   ) {
     throw new Error(
       "Invalid session length. Must be one of: 30, 45, 60, 90, or 120 minutes"
@@ -123,15 +127,14 @@ export async function createExam(input: CreateExamInput): Promise<ExamWithStatus
       studyMethods: input.studyMethods,
       preferences: input.preferences?.trim() || null,
       date: examDate,
-      hoursPerWeek: input.hoursPerWeek || null,
-      preferredSessionLengthMinutes: input.preferredSessionLengthMinutes,
+      targetSessionsPerWeek: input.targetSessionsPerWeek,
+      sessionLengthMinutes: input.sessionLengthMinutes,
     },
   });
 
   return {
     ...exam,
     studyMethods: exam.studyMethods as string[],
-    preferredSessionLengthMinutes: (exam as any).preferredSessionLengthMinutes ?? input.preferredSessionLengthMinutes,
     studySessions: [] as StudySessionData[],
   };
 }
@@ -183,9 +186,9 @@ export async function updateExam(
   if (input.studyMethods !== undefined) data.studyMethods = input.studyMethods;
   if (input.preferences !== undefined) data.preferences = input.preferences.trim() || null;
   if (input.date !== undefined) data.date = new Date(input.date);
-  if (input.hoursPerWeek !== undefined) data.hoursPerWeek = input.hoursPerWeek || null;
-  if (input.preferredSessionLengthMinutes !== undefined) {
-    data.preferredSessionLengthMinutes = input.preferredSessionLengthMinutes;
+  if (input.targetSessionsPerWeek !== undefined) data.targetSessionsPerWeek = input.targetSessionsPerWeek;
+  if (input.sessionLengthMinutes !== undefined) {
+    data.sessionLengthMinutes = input.sessionLengthMinutes;
   }
 
   // Delete old sessions + update exam + reset schedule in one transaction
@@ -200,7 +203,6 @@ export async function updateExam(
   return {
     ...updated,
     studyMethods: updated.studyMethods as string[],
-    preferredSessionLengthMinutes: (updated as any).preferredSessionLengthMinutes ?? 60,
     studySessions: [],
   };
 }

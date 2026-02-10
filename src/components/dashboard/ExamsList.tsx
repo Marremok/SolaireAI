@@ -163,25 +163,18 @@ function ExamCard({ exam, colorClass, onEdit, onDelete, isDeleting }: ExamCardPr
           </div>
         )}
 
-        {/* Hours per Week */}
-        {exam.hoursPerWeek && (
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2 text-muted-foreground/60">
-              <Clock className="h-3 w-3" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">
-                Target Effort
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <p className="text-xs font-semibold text-foreground/90">
-                {exam.hoursPerWeek}h/week
-              </p>
-              <div className="h-1 flex-1 bg-muted/30 rounded-full overflow-hidden">
-                <div className="h-full bg-primary/40 w-2/3 rounded-full" />
-              </div>
-            </div>
+        {/* Study Plan */}
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2 text-muted-foreground/60">
+            <Clock className="h-3 w-3" />
+            <span className="text-[10px] font-bold uppercase tracking-widest">
+              Study Plan
+            </span>
           </div>
-        )}
+          <p className="text-xs font-semibold text-foreground/90">
+            {exam.targetSessionsPerWeek}x / week · {exam.sessionLengthMinutes} min
+          </p>
+        </div>
 
         {/* Preferences */}
         {exam.preferences && (

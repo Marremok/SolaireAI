@@ -44,7 +44,7 @@ function ExamCard({ exam, colorClass, onEdit }: { exam: ExamWithStatus; colorCla
     ? exam.studyMethods.slice(0, 2).join(", ")
     : "";
 
-  const effortText = exam.hoursPerWeek ? `${exam.hoursPerWeek}h/week` : "Not set";
+  const effortText = `${exam.targetSessionsPerWeek}x/week · ${exam.sessionLengthMinutes}min`;
 
   return (
     <motion.div

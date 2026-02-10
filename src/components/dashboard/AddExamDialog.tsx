@@ -56,12 +56,12 @@ const examSchema = z.object({
   subject: z.string().max(100, "Subject is too long").optional(),
   preferences: z.string().max(500, "Description is too long").optional(),
   date: z.date(),
-  hoursPerWeek: z.coerce
+  targetSessionsPerWeek: z.coerce
     .number()
-    .min(0.5, "Minimum 0.5 hours per week")
-    .max(168, "Maximum 168 hours per week")
-    .optional(),
-  preferredSessionLengthMinutes: z.coerce
+    .int("Must be a whole number")
+    .min(1, "At least 1 session per week")
+    .max(21, "Maximum 21 sessions per week"),
+  sessionLengthMinutes: z.coerce
     .number()
     .refine((val) => [30, 45, 60, 90, 120].includes(val), {
       message: "Must be 30, 45, 60, 90, or 120 minutes",
@@ -104,8 +104,8 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
       title: "",
       subject: "",
       preferences: "",
-      hoursPerWeek: undefined,
-      preferredSessionLengthMinutes: 60,
+      targetSessionsPerWeek: 3,
+      sessionLengthMinutes: 60,
       studyMethods: [],
     },
   });
@@ -118,8 +118,8 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
         subject: exam.subject ?? "",
         preferences: exam.preferences ?? "",
         date: new Date(exam.date),
-        hoursPerWeek: exam.hoursPerWeek ?? undefined,
-        preferredSessionLengthMinutes: exam.preferredSessionLengthMinutes,
+        targetSessionsPerWeek: exam.targetSessionsPerWeek,
+        sessionLengthMinutes: exam.sessionLengthMinutes,
         studyMethods: exam.studyMethods,
       });
     }
@@ -150,8 +150,8 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
             subject: data.subject || undefined,
             preferences: data.preferences || undefined,
             date: data.date,
-            hoursPerWeek: data.hoursPerWeek || undefined,
-            preferredSessionLengthMinutes: data.preferredSessionLengthMinutes,
+            targetSessionsPerWeek: data.targetSessionsPerWeek,
+            sessionLengthMinutes: data.sessionLengthMinutes,
             studyMethods: data.studyMethods,
           },
         });
@@ -165,8 +165,8 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
           subject: data.subject || undefined,
           preferences: data.preferences || undefined,
           date: data.date,
-          hoursPerWeek: data.hoursPerWeek || undefined,
-          preferredSessionLengthMinutes: data.preferredSessionLengthMinutes,
+          targetSessionsPerWeek: data.targetSessionsPerWeek,
+          sessionLengthMinutes: data.sessionLengthMinutes,
           studyMethods: data.studyMethods,
         });
 
@@ -277,32 +277,37 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
               )}
             </div>
 
-            {/* Hours per Week */}
+            {/* Sessions per Week */}
             <div className="grid gap-2">
-              <Label htmlFor="hoursPerWeek">Target Hours / Week</Label>
+              <Label htmlFor="targetSessionsPerWeek">
+                Sessions per Week <span className="text-destructive">*</span>
+              </Label>
               <Input
-                id="hoursPerWeek"
+                id="targetSessionsPerWeek"
                 type="number"
-                step="0.5"
-                min="0.5"
-                max="168"
-                placeholder="e.g., 8 or 8.5"
-                {...register("hoursPerWeek")}
+                step="1"
+                min="1"
+                max="21"
+                placeholder="e.g., 5"
+                {...register("targetSessionsPerWeek")}
               />
-              {errors.hoursPerWeek && (
+              <p className="text-xs text-muted-foreground">
+                Exactly this many study sessions will be scheduled each week
+              </p>
+              {errors.targetSessionsPerWeek && (
                 <p className="text-xs text-destructive">
-                  {errors.hoursPerWeek.message}
+                  {errors.targetSessionsPerWeek.message}
                 </p>
               )}
             </div>
 
-            {/* Preferred Session Length */}
+            {/* Session Length */}
             <div className="grid gap-2">
-              <Label htmlFor="sessionLength">Preferred Session Length</Label>
+              <Label htmlFor="sessionLength">Session Length</Label>
               <Select
-                value={watch("preferredSessionLengthMinutes")?.toString() || "60"}
+                value={watch("sessionLengthMinutes")?.toString() || "60"}
                 onValueChange={(val) =>
-                  setValue("preferredSessionLengthMinutes", parseInt(val), {
+                  setValue("sessionLengthMinutes", parseInt(val), {
                     shouldDirty: true,
                   })
                 }
@@ -321,9 +326,9 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
               <p className="text-xs text-muted-foreground">
                 How long you want each study session to be
               </p>
-              {errors.preferredSessionLengthMinutes && (
+              {errors.sessionLengthMinutes && (
                 <p className="text-xs text-destructive">
-                  {errors.preferredSessionLengthMinutes.message}
+                  {errors.sessionLengthMinutes.message}
                 </p>
               )}
             </div>
