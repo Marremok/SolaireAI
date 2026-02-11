@@ -338,9 +338,16 @@ function deriveScheduleInputs(
   const startMonday = getMondayOfWeek(startDate);
   const lastMonday = getMondayOfWeek(lastStudyDay);
 
+  const lastStudyDayStr = dateToStr(lastStudyDay);
+
   // Same-week edge case: start and lastStudyDay in the same ISO week
   if (startMonday.getTime() === lastMonday.getTime()) {
     const studyDays = getStudyDaysInRange(startDate, lastStudyDay, restDays);
+    // Force-include the day before exam even if it's a rest day
+    if (!studyDays.includes(lastStudyDayStr)) {
+      studyDays.push(lastStudyDayStr);
+      studyDays.sort();
+    }
     const raw = Math.ceil(studyDays.length * studySessionsPerDay);
     const sessionCount = Math.max(1, raw);
 
@@ -408,6 +415,11 @@ function deriveScheduleInputs(
       lastStudyDay,
       restDays
     );
+    // Force-include the day before exam even if it's a rest day
+    if (!examWeekStudyDays.includes(lastStudyDayStr)) {
+      examWeekStudyDays.push(lastStudyDayStr);
+      examWeekStudyDays.sort();
+    }
 
     if (examWeekStudyDays.length > 0) {
       const rawExam = Math.ceil(
