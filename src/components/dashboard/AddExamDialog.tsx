@@ -37,7 +37,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useCreateExam, useUpdateExam } from "@/hooks/use-exams";
 import type { ExamWithStatus } from "@/lib/actions/exam";
-import { WHEN_TO_START_OPTIONS } from "@/lib/actions/exam";
+import { WHEN_TO_START_OPTIONS } from "@/lib/constants";
 
 // Available study methods
 const STUDY_METHODS = [

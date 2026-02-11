@@ -2,19 +2,7 @@
 
 import { requireProUser } from "@/lib/auth";
 import { prisma } from "../prisma";
-
-export const WHEN_TO_START_OPTIONS = [
-  "tomorrow",
-  "in_2_days",
-  "in_3_days",
-  "next_week",
-  "the_week_before",
-  "2_weeks_before",
-  "3_weeks_before",
-  "4_weeks_before",
-] as const;
-
-export type WhenToStartStudying = (typeof WHEN_TO_START_OPTIONS)[number];
+import { WHEN_TO_START_OPTIONS, type WhenToStartStudying } from "@/lib/constants";
 
 export interface CreateExamInput {
   title: string;
