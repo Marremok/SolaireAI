@@ -285,7 +285,16 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
                     selected={selectedDate}
                     onSelect={(date) => {
                       if (date) {
-                        setValue("date", date);
+                        // Use UTC noon to prevent timezone shifts
+                        const utcDate = new Date(
+                          Date.UTC(
+                            date.getFullYear(),
+                            date.getMonth(),
+                            date.getDate(),
+                            12, 0, 0, 0
+                          )
+                        );
+                        setValue("date", utcDate);
                         setCalendarOpen(false);
                       }
                     }}

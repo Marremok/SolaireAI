@@ -526,37 +526,37 @@ function generateDeterministicSchedule(
   return allSessions;
 }
 
-// ── ENSURE PRE-EXAM SESSION ─────────────────────────────────────
+// ── FINAL EXAM PREP: GUARANTEE SESSION DAY BEFORE EXAM ──────────
 
 /**
- * Unconditionally guarantees a session on the day before the exam.
- * Runs AFTER AI/deterministic output — if the day is missing, appends one.
+ * Guarantees a "Final Exam Prep" session on the day before the exam.
+ * If sessions already exist on that day, changes the last one's method.
+ * If no sessions exist, appends one. Runs AFTER AI/deterministic output.
  */
-function ensurePreExamSession(
+function ensureFinalExamPrep(
   sessions: SessionOutput[],
   examDateStr: string,
-  sessionLengthMinutes: number,
-  studyMethods: string[]
+  sessionLengthMinutes: number
 ): SessionOutput[] {
   const examDate = new Date(examDateStr + "T00:00:00Z");
   const dayBefore = addDaysUTC(examDate, -1);
   const dayBeforeStr = dateToStr(dayBefore);
 
-  const hasSession = sessions.some((s) => s.date === dayBeforeStr);
-  if (hasSession) return sessions;
+  const sessionsOnDay = sessions.filter((s) => s.date === dayBeforeStr);
 
-  // Pick method: use the next in cycle after the last session's method
-  const lastMethod = sessions.length > 0 ? sessions[sessions.length - 1].method : null;
-  const lastIdx = lastMethod ? studyMethods.indexOf(lastMethod) : -1;
-  const method = studyMethods[(lastIdx + 1) % studyMethods.length];
+  if (sessionsOnDay.length > 0) {
+    // Change the last session on that day to "Final Exam Prep"
+    sessionsOnDay[sessionsOnDay.length - 1].method = "Final Exam Prep";
+  } else {
+    // No sessions on day before exam — add one
+    sessions.push({
+      date: dayBeforeStr,
+      durationMinutes: sessionLengthMinutes,
+      method: "Final Exam Prep",
+    });
+    sessions.sort((a, b) => a.date.localeCompare(b.date));
+  }
 
-  sessions.push({
-    date: dayBeforeStr,
-    durationMinutes: sessionLengthMinutes,
-    method,
-  });
-
-  sessions.sort((a, b) => a.date.localeCompare(b.date));
   return sessions;
 }
 
@@ -846,12 +846,11 @@ export async function POST(req: Request) {
         );
       }
 
-      // ── GUARANTEE: day before exam always has a session ─────────
-      finalSessions = ensurePreExamSession(
+      // ── GUARANTEE: "Final Exam Prep" session day before exam ────
+      finalSessions = ensureFinalExamPrep(
         finalSessions,
         examDateStr,
-        inputs.sessionLengthMinutes,
-        studyMethods
+        inputs.sessionLengthMinutes
       );
 
       // ── PERSIST ─────────────────────────────────────────────────
