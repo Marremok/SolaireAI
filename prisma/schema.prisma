@@ -47,6 +47,7 @@ model Exam {
   updatedAt     DateTime    @updatedAt
   targetSessionsPerWeek Int
   sessionLengthMinutes  Int      @default(60)
+  whenToStartStudying   String   @default("tomorrow")
   status        ExamStatus  @default(UPCOMING)
 
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)

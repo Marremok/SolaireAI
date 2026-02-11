@@ -37,6 +37,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useCreateExam, useUpdateExam } from "@/hooks/use-exams";
 import type { ExamWithStatus } from "@/lib/actions/exam";
+import { WHEN_TO_START_OPTIONS } from "@/lib/actions/exam";
 
 // Available study methods
 const STUDY_METHODS = [
@@ -50,12 +51,28 @@ const STUDY_METHODS = [
   "Teaching Others",
 ];
 
+// Human-readable labels for whenToStartStudying options
+const WHEN_TO_START_LABELS: Record<string, string> = {
+  tomorrow: "Tomorrow",
+  in_2_days: "In 2 days",
+  in_3_days: "In 3 days",
+  next_week: "Next week",
+  the_week_before: "1 week before exam",
+  "2_weeks_before": "2 weeks before exam",
+  "3_weeks_before": "3 weeks before exam",
+  "4_weeks_before": "4 weeks before exam",
+};
+
 // Form validation schema
 const examSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
   subject: z.string().max(100, "Subject is too long").optional(),
   preferences: z.string().max(500, "Description is too long").optional(),
   date: z.date(),
+  whenToStartStudying: z.string().refine(
+    (val) => (WHEN_TO_START_OPTIONS as readonly string[]).includes(val),
+    { message: "Invalid start time" }
+  ),
   targetSessionsPerWeek: z.coerce
     .number()
     .int("Must be a whole number")
@@ -104,6 +121,7 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
       title: "",
       subject: "",
       preferences: "",
+      whenToStartStudying: "tomorrow",
       targetSessionsPerWeek: 3,
       sessionLengthMinutes: 60,
       studyMethods: [],
@@ -118,6 +136,7 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
         subject: exam.subject ?? "",
         preferences: exam.preferences ?? "",
         date: new Date(exam.date),
+        whenToStartStudying: exam.whenToStartStudying,
         targetSessionsPerWeek: exam.targetSessionsPerWeek,
         sessionLengthMinutes: exam.sessionLengthMinutes,
         studyMethods: exam.studyMethods,
@@ -150,6 +169,7 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
             subject: data.subject || undefined,
             preferences: data.preferences || undefined,
             date: data.date,
+            whenToStartStudying: data.whenToStartStudying,
             targetSessionsPerWeek: data.targetSessionsPerWeek,
             sessionLengthMinutes: data.sessionLengthMinutes,
             studyMethods: data.studyMethods,
@@ -165,6 +185,7 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
           subject: data.subject || undefined,
           preferences: data.preferences || undefined,
           date: data.date,
+          whenToStartStudying: data.whenToStartStudying,
           targetSessionsPerWeek: data.targetSessionsPerWeek,
           sessionLengthMinutes: data.sessionLengthMinutes,
           studyMethods: data.studyMethods,
@@ -274,6 +295,35 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
               </Popover>
               {errors.date && (
                 <p className="text-xs text-destructive">{errors.date.message}</p>
+              )}
+            </div>
+
+            {/* When to Start Studying */}
+            <div className="grid gap-2">
+              <Label htmlFor="whenToStartStudying">
+                Start studying <span className="text-destructive">*</span>
+              </Label>
+              <Select
+                value={watch("whenToStartStudying") || "tomorrow"}
+                onValueChange={(val) =>
+                  setValue("whenToStartStudying", val, { shouldDirty: true })
+                }
+              >
+                <SelectTrigger id="whenToStartStudying">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {WHEN_TO_START_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {WHEN_TO_START_LABELS[option]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.whenToStartStudying && (
+                <p className="text-xs text-destructive">
+                  {errors.whenToStartStudying.message}
+                </p>
               )}
             </div>
 

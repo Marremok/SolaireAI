@@ -51,6 +51,7 @@ export type ExamMinAggregateOutputType = {
   updatedAt: Date | null
   targetSessionsPerWeek: number | null
   sessionLengthMinutes: number | null
+  whenToStartStudying: string | null
   status: $Enums.ExamStatus | null
   scheduleStatus: $Enums.ScheduleStatus | null
 }
@@ -66,6 +67,7 @@ export type ExamMaxAggregateOutputType = {
   updatedAt: Date | null
   targetSessionsPerWeek: number | null
   sessionLengthMinutes: number | null
+  whenToStartStudying: string | null
   status: $Enums.ExamStatus | null
   scheduleStatus: $Enums.ScheduleStatus | null
 }
@@ -82,6 +84,7 @@ export type ExamCountAggregateOutputType = {
   updatedAt: number
   targetSessionsPerWeek: number
   sessionLengthMinutes: number
+  whenToStartStudying: number
   status: number
   scheduleStatus: number
   _all: number
@@ -113,6 +116,7 @@ export type ExamMinAggregateInputType = {
   updatedAt?: true
   targetSessionsPerWeek?: true
   sessionLengthMinutes?: true
+  whenToStartStudying?: true
   status?: true
   scheduleStatus?: true
 }
@@ -128,6 +132,7 @@ export type ExamMaxAggregateInputType = {
   updatedAt?: true
   targetSessionsPerWeek?: true
   sessionLengthMinutes?: true
+  whenToStartStudying?: true
   status?: true
   scheduleStatus?: true
 }
@@ -144,6 +149,7 @@ export type ExamCountAggregateInputType = {
   updatedAt?: true
   targetSessionsPerWeek?: true
   sessionLengthMinutes?: true
+  whenToStartStudying?: true
   status?: true
   scheduleStatus?: true
   _all?: true
@@ -247,6 +253,7 @@ export type ExamGroupByOutputType = {
   updatedAt: Date
   targetSessionsPerWeek: number
   sessionLengthMinutes: number
+  whenToStartStudying: string
   status: $Enums.ExamStatus
   scheduleStatus: $Enums.ScheduleStatus
   _count: ExamCountAggregateOutputType | null
@@ -286,6 +293,7 @@ export type ExamWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   targetSessionsPerWeek?: Prisma.IntFilter<"Exam"> | number
   sessionLengthMinutes?: Prisma.IntFilter<"Exam"> | number
+  whenToStartStudying?: Prisma.StringFilter<"Exam"> | string
   status?: Prisma.EnumExamStatusFilter<"Exam"> | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFilter<"Exam"> | $Enums.ScheduleStatus
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -304,6 +312,7 @@ export type ExamOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   targetSessionsPerWeek?: Prisma.SortOrder
   sessionLengthMinutes?: Prisma.SortOrder
+  whenToStartStudying?: Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduleStatus?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -325,6 +334,7 @@ export type ExamWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   targetSessionsPerWeek?: Prisma.IntFilter<"Exam"> | number
   sessionLengthMinutes?: Prisma.IntFilter<"Exam"> | number
+  whenToStartStudying?: Prisma.StringFilter<"Exam"> | string
   status?: Prisma.EnumExamStatusFilter<"Exam"> | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFilter<"Exam"> | $Enums.ScheduleStatus
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -343,6 +353,7 @@ export type ExamOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   targetSessionsPerWeek?: Prisma.SortOrder
   sessionLengthMinutes?: Prisma.SortOrder
+  whenToStartStudying?: Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduleStatus?: Prisma.SortOrder
   _count?: Prisma.ExamCountOrderByAggregateInput
@@ -367,6 +378,7 @@ export type ExamScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
   targetSessionsPerWeek?: Prisma.IntWithAggregatesFilter<"Exam"> | number
   sessionLengthMinutes?: Prisma.IntWithAggregatesFilter<"Exam"> | number
+  whenToStartStudying?: Prisma.StringWithAggregatesFilter<"Exam"> | string
   status?: Prisma.EnumExamStatusWithAggregatesFilter<"Exam"> | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusWithAggregatesFilter<"Exam"> | $Enums.ScheduleStatus
 }
@@ -382,6 +394,7 @@ export type ExamCreateInput = {
   updatedAt?: Date | string
   targetSessionsPerWeek: number
   sessionLengthMinutes?: number
+  whenToStartStudying?: string
   status?: $Enums.ExamStatus
   scheduleStatus?: $Enums.ScheduleStatus
   user: Prisma.UserCreateNestedOneWithoutExamsInput
@@ -400,6 +413,7 @@ export type ExamUncheckedCreateInput = {
   updatedAt?: Date | string
   targetSessionsPerWeek: number
   sessionLengthMinutes?: number
+  whenToStartStudying?: string
   status?: $Enums.ExamStatus
   scheduleStatus?: $Enums.ScheduleStatus
   studySessions?: Prisma.StudySessionUncheckedCreateNestedManyWithoutExamInput
@@ -416,6 +430,7 @@ export type ExamUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   targetSessionsPerWeek?: Prisma.IntFieldUpdateOperationsInput | number
   sessionLengthMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  whenToStartStudying?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
   user?: Prisma.UserUpdateOneRequiredWithoutExamsNestedInput
@@ -434,6 +449,7 @@ export type ExamUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   targetSessionsPerWeek?: Prisma.IntFieldUpdateOperationsInput | number
   sessionLengthMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  whenToStartStudying?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
   studySessions?: Prisma.StudySessionUncheckedUpdateManyWithoutExamNestedInput
@@ -451,6 +467,7 @@ export type ExamCreateManyInput = {
   updatedAt?: Date | string
   targetSessionsPerWeek: number
   sessionLengthMinutes?: number
+  whenToStartStudying?: string
   status?: $Enums.ExamStatus
   scheduleStatus?: $Enums.ScheduleStatus
 }
@@ -466,6 +483,7 @@ export type ExamUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   targetSessionsPerWeek?: Prisma.IntFieldUpdateOperationsInput | number
   sessionLengthMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  whenToStartStudying?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
 }
@@ -482,6 +500,7 @@ export type ExamUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   targetSessionsPerWeek?: Prisma.IntFieldUpdateOperationsInput | number
   sessionLengthMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  whenToStartStudying?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
 }
@@ -508,6 +527,7 @@ export type ExamCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   targetSessionsPerWeek?: Prisma.SortOrder
   sessionLengthMinutes?: Prisma.SortOrder
+  whenToStartStudying?: Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduleStatus?: Prisma.SortOrder
 }
@@ -530,6 +550,7 @@ export type ExamMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   targetSessionsPerWeek?: Prisma.SortOrder
   sessionLengthMinutes?: Prisma.SortOrder
+  whenToStartStudying?: Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduleStatus?: Prisma.SortOrder
 }
@@ -545,6 +566,7 @@ export type ExamMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   targetSessionsPerWeek?: Prisma.SortOrder
   sessionLengthMinutes?: Prisma.SortOrder
+  whenToStartStudying?: Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduleStatus?: Prisma.SortOrder
 }
@@ -636,6 +658,7 @@ export type ExamCreateWithoutUserInput = {
   updatedAt?: Date | string
   targetSessionsPerWeek: number
   sessionLengthMinutes?: number
+  whenToStartStudying?: string
   status?: $Enums.ExamStatus
   scheduleStatus?: $Enums.ScheduleStatus
   studySessions?: Prisma.StudySessionCreateNestedManyWithoutExamInput
@@ -652,6 +675,7 @@ export type ExamUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   targetSessionsPerWeek: number
   sessionLengthMinutes?: number
+  whenToStartStudying?: string
   status?: $Enums.ExamStatus
   scheduleStatus?: $Enums.ScheduleStatus
   studySessions?: Prisma.StudySessionUncheckedCreateNestedManyWithoutExamInput
@@ -698,6 +722,7 @@ export type ExamScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   targetSessionsPerWeek?: Prisma.IntFilter<"Exam"> | number
   sessionLengthMinutes?: Prisma.IntFilter<"Exam"> | number
+  whenToStartStudying?: Prisma.StringFilter<"Exam"> | string
   status?: Prisma.EnumExamStatusFilter<"Exam"> | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFilter<"Exam"> | $Enums.ScheduleStatus
 }
@@ -713,6 +738,7 @@ export type ExamCreateWithoutStudySessionsInput = {
   updatedAt?: Date | string
   targetSessionsPerWeek: number
   sessionLengthMinutes?: number
+  whenToStartStudying?: string
   status?: $Enums.ExamStatus
   scheduleStatus?: $Enums.ScheduleStatus
   user: Prisma.UserCreateNestedOneWithoutExamsInput
@@ -730,6 +756,7 @@ export type ExamUncheckedCreateWithoutStudySessionsInput = {
   updatedAt?: Date | string
   targetSessionsPerWeek: number
   sessionLengthMinutes?: number
+  whenToStartStudying?: string
   status?: $Enums.ExamStatus
   scheduleStatus?: $Enums.ScheduleStatus
 }
@@ -761,6 +788,7 @@ export type ExamUpdateWithoutStudySessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   targetSessionsPerWeek?: Prisma.IntFieldUpdateOperationsInput | number
   sessionLengthMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  whenToStartStudying?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
   user?: Prisma.UserUpdateOneRequiredWithoutExamsNestedInput
@@ -778,6 +806,7 @@ export type ExamUncheckedUpdateWithoutStudySessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   targetSessionsPerWeek?: Prisma.IntFieldUpdateOperationsInput | number
   sessionLengthMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  whenToStartStudying?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
 }
@@ -793,6 +822,7 @@ export type ExamCreateManyUserInput = {
   updatedAt?: Date | string
   targetSessionsPerWeek: number
   sessionLengthMinutes?: number
+  whenToStartStudying?: string
   status?: $Enums.ExamStatus
   scheduleStatus?: $Enums.ScheduleStatus
 }
@@ -808,6 +838,7 @@ export type ExamUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   targetSessionsPerWeek?: Prisma.IntFieldUpdateOperationsInput | number
   sessionLengthMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  whenToStartStudying?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
   studySessions?: Prisma.StudySessionUpdateManyWithoutExamNestedInput
@@ -824,6 +855,7 @@ export type ExamUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   targetSessionsPerWeek?: Prisma.IntFieldUpdateOperationsInput | number
   sessionLengthMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  whenToStartStudying?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
   studySessions?: Prisma.StudySessionUncheckedUpdateManyWithoutExamNestedInput
@@ -840,6 +872,7 @@ export type ExamUncheckedUpdateManyWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   targetSessionsPerWeek?: Prisma.IntFieldUpdateOperationsInput | number
   sessionLengthMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  whenToStartStudying?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
   scheduleStatus?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
 }
@@ -887,6 +920,7 @@ export type ExamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   targetSessionsPerWeek?: boolean
   sessionLengthMinutes?: boolean
+  whenToStartStudying?: boolean
   status?: boolean
   scheduleStatus?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -906,6 +940,7 @@ export type ExamSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   targetSessionsPerWeek?: boolean
   sessionLengthMinutes?: boolean
+  whenToStartStudying?: boolean
   status?: boolean
   scheduleStatus?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -923,6 +958,7 @@ export type ExamSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   targetSessionsPerWeek?: boolean
   sessionLengthMinutes?: boolean
+  whenToStartStudying?: boolean
   status?: boolean
   scheduleStatus?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -940,11 +976,12 @@ export type ExamSelectScalar = {
   updatedAt?: boolean
   targetSessionsPerWeek?: boolean
   sessionLengthMinutes?: boolean
+  whenToStartStudying?: boolean
   status?: boolean
   scheduleStatus?: boolean
 }
 
-export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "subject" | "studyMethods" | "preferences" | "date" | "createdAt" | "updatedAt" | "targetSessionsPerWeek" | "sessionLengthMinutes" | "status" | "scheduleStatus", ExtArgs["result"]["exam"]>
+export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "subject" | "studyMethods" | "preferences" | "date" | "createdAt" | "updatedAt" | "targetSessionsPerWeek" | "sessionLengthMinutes" | "whenToStartStudying" | "status" | "scheduleStatus", ExtArgs["result"]["exam"]>
 export type ExamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   studySessions?: boolean | Prisma.Exam$studySessionsArgs<ExtArgs>
@@ -975,6 +1012,7 @@ export type $ExamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     updatedAt: Date
     targetSessionsPerWeek: number
     sessionLengthMinutes: number
+    whenToStartStudying: string
     status: $Enums.ExamStatus
     scheduleStatus: $Enums.ScheduleStatus
   }, ExtArgs["result"]["exam"]>
@@ -1413,6 +1451,7 @@ export interface ExamFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"Exam", 'DateTime'>
   readonly targetSessionsPerWeek: Prisma.FieldRef<"Exam", 'Int'>
   readonly sessionLengthMinutes: Prisma.FieldRef<"Exam", 'Int'>
+  readonly whenToStartStudying: Prisma.FieldRef<"Exam", 'String'>
   readonly status: Prisma.FieldRef<"Exam", 'ExamStatus'>
   readonly scheduleStatus: Prisma.FieldRef<"Exam", 'ScheduleStatus'>
 }

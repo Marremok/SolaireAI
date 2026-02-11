@@ -3,6 +3,19 @@
 import { requireProUser } from "@/lib/auth";
 import { prisma } from "../prisma";
 
+export const WHEN_TO_START_OPTIONS = [
+  "tomorrow",
+  "in_2_days",
+  "in_3_days",
+  "next_week",
+  "the_week_before",
+  "2_weeks_before",
+  "3_weeks_before",
+  "4_weeks_before",
+] as const;
+
+export type WhenToStartStudying = (typeof WHEN_TO_START_OPTIONS)[number];
+
 export interface CreateExamInput {
   title: string;
   subject?: string;
@@ -11,6 +24,7 @@ export interface CreateExamInput {
   date: Date;
   targetSessionsPerWeek: number;
   sessionLengthMinutes: number;
+  whenToStartStudying: string;
 }
 
 export interface UpdateExamInput {
@@ -21,6 +35,7 @@ export interface UpdateExamInput {
   date?: Date;
   targetSessionsPerWeek?: number;
   sessionLengthMinutes?: number;
+  whenToStartStudying?: string;
 }
 
 export interface StudySessionData {
@@ -45,6 +60,7 @@ export interface ExamWithStatus {
   updatedAt: Date;
   targetSessionsPerWeek: number;
   sessionLengthMinutes: number;
+  whenToStartStudying: string;
   status: "UPCOMING" | "COMPLETED";
   scheduleStatus: "NONE" | "GENERATING" | "GENERATED" | "FAILED";
   studySessions: StudySessionData[];
@@ -99,6 +115,11 @@ export async function createExam(input: CreateExamInput): Promise<ExamWithStatus
     throw new Error("targetSessionsPerWeek must be at least 1");
   }
 
+  // Validate whenToStartStudying
+  if (!WHEN_TO_START_OPTIONS.includes(input.whenToStartStudying as WhenToStartStudying)) {
+    throw new Error(`Invalid whenToStartStudying value: ${input.whenToStartStudying}`);
+  }
+
   // Validate sessionLengthMinutes
   const validSessionLengths = [30, 45, 60, 90, 120];
   if (
@@ -129,6 +150,7 @@ export async function createExam(input: CreateExamInput): Promise<ExamWithStatus
       date: examDate,
       targetSessionsPerWeek: input.targetSessionsPerWeek,
       sessionLengthMinutes: input.sessionLengthMinutes,
+      whenToStartStudying: input.whenToStartStudying,
     },
   });
 
@@ -189,6 +211,9 @@ export async function updateExam(
   if (input.targetSessionsPerWeek !== undefined) data.targetSessionsPerWeek = input.targetSessionsPerWeek;
   if (input.sessionLengthMinutes !== undefined) {
     data.sessionLengthMinutes = input.sessionLengthMinutes;
+  }
+  if (input.whenToStartStudying !== undefined) {
+    data.whenToStartStudying = input.whenToStartStudying;
   }
 
   // Delete old sessions + update exam + reset schedule in one transaction

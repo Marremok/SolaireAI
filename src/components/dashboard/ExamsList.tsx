@@ -29,6 +29,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { ExamWithStatus } from "@/lib/actions/exam";
 
+// Human-readable labels for whenToStartStudying
+function getStartStudyingLabel(value: string): string {
+  const labels: Record<string, string> = {
+    tomorrow: "Tomorrow",
+    in_2_days: "In 2 days",
+    in_3_days: "In 3 days",
+    next_week: "Next week",
+    the_week_before: "1 week before",
+    "2_weeks_before": "2 weeks before",
+    "3_weeks_before": "3 weeks before",
+    "4_weeks_before": "4 weeks before",
+  };
+  return labels[value] ?? value;
+}
+
 // Color palette for exam cards
 const EXAM_COLORS = [
   "border-blue-500/20",
@@ -173,6 +188,9 @@ function ExamCard({ exam, colorClass, onEdit, onDelete, isDeleting }: ExamCardPr
           </div>
           <p className="text-xs font-semibold text-foreground/90">
             {exam.targetSessionsPerWeek}x / week · {exam.sessionLengthMinutes} min
+          </p>
+          <p className="text-[11px] text-muted-foreground">
+            Start: {getStartStudyingLabel(exam.whenToStartStudying)}
           </p>
         </div>
 

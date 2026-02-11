@@ -99,6 +99,7 @@ export const ExamScalarFieldEnum = {
   updatedAt: 'updatedAt',
   targetSessionsPerWeek: 'targetSessionsPerWeek',
   sessionLengthMinutes: 'sessionLengthMinutes',
+  whenToStartStudying: 'whenToStartStudying',
   status: 'status',
   scheduleStatus: 'scheduleStatus'
 } as const
