@@ -338,16 +338,9 @@ function deriveScheduleInputs(
   const startMonday = getMondayOfWeek(startDate);
   const lastMonday = getMondayOfWeek(lastStudyDay);
 
-  const lastStudyDayStr = dateToStr(lastStudyDay);
-
   // Same-week edge case: start and lastStudyDay in the same ISO week
   if (startMonday.getTime() === lastMonday.getTime()) {
     const studyDays = getStudyDaysInRange(startDate, lastStudyDay, restDays);
-    // Force-include the day before exam even if it's a rest day
-    if (!studyDays.includes(lastStudyDayStr)) {
-      studyDays.push(lastStudyDayStr);
-      studyDays.sort();
-    }
     const raw = Math.ceil(studyDays.length * studySessionsPerDay);
     const sessionCount = Math.max(1, raw);
 
@@ -415,11 +408,6 @@ function deriveScheduleInputs(
       lastStudyDay,
       restDays
     );
-    // Force-include the day before exam even if it's a rest day
-    if (!examWeekStudyDays.includes(lastStudyDayStr)) {
-      examWeekStudyDays.push(lastStudyDayStr);
-      examWeekStudyDays.sort();
-    }
 
     if (examWeekStudyDays.length > 0) {
       const rawExam = Math.ceil(
@@ -536,6 +524,40 @@ function generateDeterministicSchedule(
 
   allSessions.sort((a, b) => a.date.localeCompare(b.date));
   return allSessions;
+}
+
+// ── ENSURE PRE-EXAM SESSION ─────────────────────────────────────
+
+/**
+ * Unconditionally guarantees a session on the day before the exam.
+ * Runs AFTER AI/deterministic output — if the day is missing, appends one.
+ */
+function ensurePreExamSession(
+  sessions: SessionOutput[],
+  examDateStr: string,
+  sessionLengthMinutes: number,
+  studyMethods: string[]
+): SessionOutput[] {
+  const examDate = new Date(examDateStr + "T00:00:00Z");
+  const dayBefore = addDaysUTC(examDate, -1);
+  const dayBeforeStr = dateToStr(dayBefore);
+
+  const hasSession = sessions.some((s) => s.date === dayBeforeStr);
+  if (hasSession) return sessions;
+
+  // Pick method: use the next in cycle after the last session's method
+  const lastMethod = sessions.length > 0 ? sessions[sessions.length - 1].method : null;
+  const lastIdx = lastMethod ? studyMethods.indexOf(lastMethod) : -1;
+  const method = studyMethods[(lastIdx + 1) % studyMethods.length];
+
+  sessions.push({
+    date: dayBeforeStr,
+    durationMinutes: sessionLengthMinutes,
+    method,
+  });
+
+  sessions.sort((a, b) => a.date.localeCompare(b.date));
+  return sessions;
 }
 
 // ── STRICT AI OUTPUT VALIDATION (WEEK-AWARE) ────────────────────
@@ -823,6 +845,14 @@ export async function POST(req: Request) {
           "Failed to place any sessions — this should not happen. Please report this error."
         );
       }
+
+      // ── GUARANTEE: day before exam always has a session ─────────
+      finalSessions = ensurePreExamSession(
+        finalSessions,
+        examDateStr,
+        inputs.sessionLengthMinutes,
+        studyMethods
+      );
 
       // ── PERSIST ─────────────────────────────────────────────────
       await prisma.studySession.deleteMany({ where: { examId } });
