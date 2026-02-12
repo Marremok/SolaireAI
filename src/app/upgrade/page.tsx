@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
-import { PricingTable } from "@clerk/nextjs";
+import { PricingTable, UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { CheckCircle2, Sparkles, Shield, CreditCard, X } from "lucide-react";
+import { CheckCircle2, Sparkles, Shield, CreditCard, X, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Upgrade to Pro",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 export default async function UpgradePage() {
   const { has, userId } = await auth();
 
-  if (!userId) redirect("/sign-in");
+  if (!userId) redirect("/");
   if (has({ plan: "pro" })) redirect("/dashboard");
 
   return (
@@ -30,6 +31,14 @@ export default async function UpgradePage() {
         <div className="absolute bottom-[-10%] right-[-10%] h-125 w-125 rounded-full bg-violet-500/8 blur-[100px]" />
         <div className="absolute top-[40%] left-[-10%] h-100 w-100 rounded-full bg-primary/5 blur-[100px]" />
       </div>
+
+      <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-12"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Homepage
+      </Link>
 
       <div className="flex flex-col items-center min-h-screen px-4 py-16 md:py-24">
         {/* Header section */}
@@ -100,6 +109,42 @@ export default async function UpgradePage() {
             <X className="h-4 w-4" />
             <span className="text-sm font-medium">Cancel Anytime</span>
           </div>
+        </div>
+
+        {/* --- RIGHT: ACTIONS & PROFILE --- */}
+        <div className="flex items-center gap-4">
+          <div className="h-6 w-px bg-primary/10 mx-1" />
+
+          {/* User Profile */}
+          <UserButton
+            appearance={{
+              variables: {
+                colorPrimary: "#1c9cf0",
+                colorBackground: "#17181c",
+                colorForeground: "#e7e9ea",
+                colorMutedForeground: "#72767a",
+                colorBorder: "#242628",
+                colorInput: "#22303c",
+                colorInputForeground: "#e7e9ea",
+                colorNeutral: "#72767a",
+                borderRadius: "0.75rem",
+              },
+              elements: {
+                userButtonAvatarBox: "h-9 w-9 border border-primary/20 shadow-sm hover:scale-105 transition-transform",
+                userButtonPopoverCard: "rounded-2xl border border-white/5 shadow-2xl bg-[#17181c]",
+                userButtonTrigger: "focus:shadow-none focus:outline-hidden",
+                userButtonPopoverActionButton: "hover:bg-white/5 transition-colors rounded-lg",
+                userButtonPopoverActionButtonText: "text-[#e7e9ea] text-sm font-medium",
+                userButtonPopoverActionButtonIcon: "text-[#72767a]",
+                userButtonPopoverFooter: "hidden",
+              },
+            }}
+          >
+            <UserButton.MenuItems>
+              <UserButton.Action label="manageAccount" />
+              <UserButton.Action label="signOut" />
+            </UserButton.MenuItems>
+          </UserButton>
         </div>
       </div>
     </div>

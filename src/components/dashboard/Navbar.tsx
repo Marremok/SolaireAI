@@ -84,21 +84,6 @@ export default function Navbar() {
             }}
           >
             <UserButton.MenuItems>
-              <UserButton.Link
-                label="Upgrade to Pro"
-                labelIcon={<CreditCard className="h-4 w-4" />}
-                href="/upgrade"
-              />
-              <UserButton.Link
-                label="Settings"
-                labelIcon={<Settings className="h-4 w-4" />}
-                href="/dashboard/settings"
-              />
-              <UserButton.Link
-                label="Help & Support"
-                labelIcon={<LifeBuoy className="h-4 w-4" />}
-                href="/dashboard/contact"
-              />
               <UserButton.Action label="manageAccount" />
               <UserButton.Action label="signOut" />
             </UserButton.MenuItems>
