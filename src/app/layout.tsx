@@ -56,6 +56,21 @@ export default function RootLayout({
   return (
     <ClerkProvider
       appearance={{
+        variables: {
+          colorPrimary: "#1c9cf0",
+          colorBackground: "#17181c",
+          colorForeground: "#e7e9ea",
+          colorMutedForeground: "#72767a",
+          colorBorder: "#242628",
+          colorInput: "#22303c",
+          colorInputForeground: "#e7e9ea",
+          colorNeutral: "#72767a",
+          colorDanger: "#f4212e",
+          colorSuccess: "#00b87a",
+          colorWarning: "#f7b928",
+          borderRadius: "0.75rem",
+          fontFamily: "var(--font-geist-sans), sans-serif",
+        },
         layout: {
           logoImageUrl: "/logo.png",
           logoPlacement: "inside",
@@ -67,6 +82,27 @@ export default function RootLayout({
           showOptionalFields: false,
           shimmer: true,
           animations: true,
+        },
+        elements: {
+          card: "shadow-xl border border-white/5",
+          formButtonPrimary:
+            "bg-[#1c9cf0] hover:bg-[#1a8cd8] transition-all duration-200 shadow-lg shadow-[#1c9cf0]/20 font-semibold",
+          footerActionLink: "text-[#1c9cf0] hover:text-[#1a8cd8]",
+          headerTitle: "text-[#e7e9ea] font-bold",
+          headerSubtitle: "text-[#72767a]",
+          socialButtonsBlockButton:
+            "border-[#242628] hover:bg-white/5 transition-colors",
+          formFieldInput:
+            "bg-[#22303c] border-[#242628] text-[#e7e9ea] focus:border-[#1c9cf0] focus:ring-[#1c9cf0]/20",
+          formFieldLabel: "text-[#e7e9ea]",
+          dividerLine: "bg-[#242628]",
+          dividerText: "text-[#72767a]",
+          identityPreviewEditButton: "text-[#1c9cf0]",
+          formFieldSuccessText: "text-[#00b87a]",
+          alertText: "text-[#f4212e]",
+          profileSectionPrimaryButton: "text-[#1c9cf0] hover:text-[#1a8cd8]",
+          navbarButton: "hover:bg-white/5 transition-colors",
+          badge: "bg-[#1c9cf0]/10 text-[#1c9cf0] border-[#1c9cf0]/20",
         },
       }}
     >

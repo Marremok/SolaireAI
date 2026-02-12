@@ -1,7 +1,7 @@
 "use client"
 
 import { UserButton } from "@clerk/nextjs";
-import { Sparkles, LayoutDashboard, Calendar, Settings, Bell, NotebookPen, PencilLine, Mail } from "lucide-react";
+import { Sparkles, LayoutDashboard, Calendar, Settings, NotebookPen, Mail, CreditCard, LifeBuoy } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -61,13 +61,48 @@ export default function Navbar() {
           {/* User Profile */}
           <UserButton
             appearance={{
+              variables: {
+                colorPrimary: "#1c9cf0",
+                colorBackground: "#17181c",
+                colorForeground: "#e7e9ea",
+                colorMutedForeground: "#72767a",
+                colorBorder: "#242628",
+                colorInput: "#22303c",
+                colorInputForeground: "#e7e9ea",
+                colorNeutral: "#72767a",
+                borderRadius: "0.75rem",
+              },
               elements: {
                 userButtonAvatarBox: "h-9 w-9 border border-primary/20 shadow-sm hover:scale-105 transition-transform",
-                userButtonPopoverCard: "rounded-2xl border border-primary/10 shadow-2xl",
+                userButtonPopoverCard: "rounded-2xl border border-white/5 shadow-2xl bg-[#17181c]",
                 userButtonTrigger: "focus:shadow-none focus:outline-hidden",
+                userButtonPopoverActionButton: "hover:bg-white/5 transition-colors rounded-lg",
+                userButtonPopoverActionButtonText: "text-[#e7e9ea] text-sm font-medium",
+                userButtonPopoverActionButtonIcon: "text-[#72767a]",
+                userButtonPopoverFooter: "hidden",
               },
             }}
-          />
+          >
+            <UserButton.MenuItems>
+              <UserButton.Link
+                label="Upgrade to Pro"
+                labelIcon={<CreditCard className="h-4 w-4" />}
+                href="/upgrade"
+              />
+              <UserButton.Link
+                label="Settings"
+                labelIcon={<Settings className="h-4 w-4" />}
+                href="/dashboard/settings"
+              />
+              <UserButton.Link
+                label="Help & Support"
+                labelIcon={<LifeBuoy className="h-4 w-4" />}
+                href="/dashboard/contact"
+              />
+              <UserButton.Action label="manageAccount" />
+              <UserButton.Action label="signOut" />
+            </UserButton.MenuItems>
+          </UserButton>
         </div>
       </nav>
     </motion.header>

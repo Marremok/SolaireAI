@@ -221,8 +221,8 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
           )}
         </DialogTrigger>
       )}
-      <DialogContent className="sm:max-w-125 bg-background/95 backdrop-blur-xl border-border/50">
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogContent className="sm:max-w-125 bg-background/95 backdrop-blur-xl border-border/50 max-h-[90vh] flex flex-col">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col min-h-0">
           <DialogHeader>
             <DialogTitle className="text-xl">
               {isEditMode ? "Edit Exam" : "Add New Exam"}
@@ -234,7 +234,7 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-5 py-6">
+          <div className="grid gap-5 py-6 overflow-y-auto min-h-0 flex-1 pr-1">
             {/* Title */}
             <div className="grid gap-2">
               <Label htmlFor="title">

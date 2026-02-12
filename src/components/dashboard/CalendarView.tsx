@@ -35,7 +35,7 @@ interface DayData {
   sessions: StudySessionData[];
 }
 
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function CalendarView() {
   const today = useMemo(() => getToday(), []);

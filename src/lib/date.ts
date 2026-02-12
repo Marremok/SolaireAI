@@ -166,14 +166,17 @@ export function getFirstDayOfMonth(year: number, month: number): number {
 
 /**
  * Get calendar grid for a month (includes padding days from prev/next months)
- * Starts on Sunday (can be adjusted if needed)
+ * Starts on Monday (EU standard)
  */
 export function getCalendarGrid(year: number, month: number): (Date | null)[] {
   const firstDayOfMonth = getFirstDayOfMonth(year, month);
   const daysInMonth = getDaysInMonth(year, month);
 
+  // Convert Sunday=0..Saturday=6 to Monday=0..Sunday=6
+  const mondayBasedFirstDay = (firstDayOfMonth + 6) % 7;
+
   // Pad the beginning with null values for days before the 1st
-  const grid: (Date | null)[] = Array(firstDayOfMonth).fill(null);
+  const grid: (Date | null)[] = Array(mondayBasedFirstDay).fill(null);
 
   // Add all days of the month
   grid.push(...daysInMonth);
