@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion";
-import { GraduationCap, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
+import { GraduationCap, BookOpen, Coffee, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useMemo } from "react";
 import {
   getToday,
@@ -11,8 +11,10 @@ import {
   getPreviousMonth,
   getNextMonth,
   isSameDay,
+  getDayNameFull,
 } from "@/lib/date";
 import { useExams } from "@/hooks/use-exams";
+import { useUserSettings } from "@/hooks/use-settings";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ExamWithStatus, StudySessionData } from "@/lib/actions/exam";
 
@@ -31,6 +33,7 @@ function getExamColor(index: number): string {
 
 interface DayData {
   date: Date | null;
+  isRestDay: boolean;
   exams: ExamWithStatus[];
   sessions: StudySessionData[];
 }
@@ -43,6 +46,8 @@ export default function CalendarView() {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
 
   const { data: exams, isLoading } = useExams();
+  const { data: settings } = useUserSettings();
+  const userRestDays: string[] = settings?.restDays ?? [];
 
   // Generate calendar data for the current month with exams and study sessions
   const calendarDays = useMemo<DayData[]>(() => {
@@ -51,7 +56,7 @@ export default function CalendarView() {
 
     return grid.map((date) => {
       if (!date) {
-        return { date: null, exams: [], sessions: [] };
+        return { date: null, isRestDay: false, exams: [], sessions: [] };
       }
 
       const dayExams = (exams || []).filter((exam) =>
@@ -60,10 +65,11 @@ export default function CalendarView() {
       const daySessions = allSessions.filter((s) =>
         isSameDay(new Date(s.date), date)
       );
+      const isRestDay = userRestDays.includes(getDayNameFull(date).toUpperCase());
 
-      return { date, exams: dayExams, sessions: daySessions };
+      return { date, isRestDay, exams: dayExams, sessions: daySessions };
     });
-  }, [currentYear, currentMonth, exams]);
+  }, [currentYear, currentMonth, exams, userRestDays]);
 
   const goToPreviousMonth = () => {
     const { year, month } = getPreviousMonth(currentYear, currentMonth);
@@ -229,6 +235,24 @@ export default function CalendarView() {
                         +{Math.max(0, day.exams.length - 2) + Math.max(0, day.sessions.length - 2)} more
                       </span>
                     )}
+
+                    {/* Rest Day Badge */}
+                    {day.isRestDay && hasContent && (
+                      <div className="flex items-center gap-1.5 py-1 px-2 rounded-lg bg-muted/50 border border-muted-foreground/10 text-muted-foreground text-[10px] font-medium">
+                        <Coffee className="h-3 w-3 shrink-0" />
+                        <span>Rest</span>
+                      </div>
+                    )}
+
+                    {/* Rest Day - Empty */}
+                    {day.isRestDay && !hasContent && (
+                      <div className="flex flex-col items-center justify-center gap-1 opacity-50">
+                        <Coffee className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-[9px] uppercase tracking-widest font-medium text-muted-foreground">
+                          Rest day
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </>
               )}
@@ -250,6 +274,10 @@ export default function CalendarView() {
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full ring-2 ring-primary" />
           <span className="text-xs text-muted-foreground">Today</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-full bg-muted/50 border border-muted-foreground/20" />
+          <span className="text-xs text-muted-foreground">Rest Day</span>
         </div>
       </div>
     </div>

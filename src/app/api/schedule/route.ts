@@ -261,16 +261,16 @@ function computeStartDate(
       start = getNextMonday(today);
       break;
     case "the_week_before":
-      start = addDaysUTC(exam, -7);
+      start = addDaysUTC(getMondayOfWeek(exam), -7);
       break;
     case "2_weeks_before":
-      start = addDaysUTC(exam, -14);
+      start = addDaysUTC(getMondayOfWeek(exam), -14);
       break;
     case "3_weeks_before":
-      start = addDaysUTC(exam, -21);
+      start = addDaysUTC(getMondayOfWeek(exam), -21);
       break;
     case "4_weeks_before":
-      start = addDaysUTC(exam, -28);
+      start = addDaysUTC(getMondayOfWeek(exam), -28);
       break;
     default:
       throw new Error(`Invalid whenToStartStudying: ${whenToStart}`);

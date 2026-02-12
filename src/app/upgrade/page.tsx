@@ -36,12 +36,12 @@ export default async function UpgradePage() {
       <nav className="absolute top-0 inset-x-0 z-50 flex items-center justify-between px-6 py-6 md:px-12">
         {/* Left: Back Link with Glass effect & Slide Animation */}
         <Link
-          href="/dashboard"
+          href="/"
           className="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background/40 backdrop-blur-md border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all duration-300"
         >
           <ArrowLeft className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:-translate-x-1 transition-transform duration-300" />
           <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-            Back to Dashboard
+            Back to Homepage
           </span>
         </Link>
 
