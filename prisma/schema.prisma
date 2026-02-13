@@ -27,6 +27,9 @@ model User {
   // Rest & recovery settings
   restDays      String[]  @default([])
 
+  // Subject-color mapping
+  subjects      Json      @default("[]")
+
   exams         Exam[]
   studySessions StudySession[]
 

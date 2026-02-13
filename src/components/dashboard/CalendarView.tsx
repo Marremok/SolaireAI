@@ -16,20 +16,8 @@ import {
 import { useExams } from "@/hooks/use-exams";
 import { useUserSettings } from "@/hooks/use-settings";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getSubjectColor, type SubjectConfig } from "@/lib/colors";
 import type { ExamWithStatus, StudySessionData } from "@/lib/actions/exam";
-
-// Color palette for exams
-const EXAM_COLORS = [
-  "from-blue-500 to-cyan-400",
-  "from-violet-500 to-purple-400",
-  "from-emerald-500 to-teal-400",
-  "from-orange-500 to-amber-400",
-  "from-rose-500 to-pink-400",
-];
-
-function getExamColor(index: number): string {
-  return EXAM_COLORS[index % EXAM_COLORS.length];
-}
 
 interface DayData {
   date: Date | null;
@@ -48,6 +36,7 @@ export default function CalendarView() {
   const { data: exams, isLoading } = useExams();
   const { data: settings } = useUserSettings();
   const userRestDays: string[] = settings?.restDays ?? [];
+  const userSubjects: SubjectConfig[] = settings?.subjects ?? [];
 
   // Generate calendar data for the current month with exams and study sessions
   const calendarDays = useMemo<DayData[]>(() => {
@@ -209,27 +198,41 @@ export default function CalendarView() {
 
                   {/* Exams & Sessions */}
                   <div className="flex-1 flex flex-col gap-1">
-                    {day.exams.slice(0, 2).map((exam, examIndex) => (
-                      <div
-                        key={exam.id}
-                        className={`
-                          flex items-center gap-1.5 py-1.5 px-2 rounded-lg
-                          bg-linear-to-r ${getExamColor(examIndex)} text-white text-[10px] font-semibold
-                        `}
-                      >
-                        <GraduationCap className="h-3 w-3 shrink-0" />
-                        <span className="truncate">{exam.title}</span>
-                      </div>
-                    ))}
-                    {day.sessions.slice(0, 2).map((session) => (
-                      <div
-                        key={session.id}
-                        className="flex items-center gap-1.5 py-1 px-2 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-[10px] font-medium"
-                      >
-                        <BookOpen className="h-3 w-3 shrink-0" />
-                        <span className="truncate">{session.topic || session.method}</span>
-                      </div>
-                    ))}
+                    {day.exams.slice(0, 2).map((exam) => {
+                      const colorSet = getSubjectColor(exam.subject, userSubjects);
+                      return (
+                        <div
+                          key={exam.id}
+                          className={`
+                            flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[10px] font-semibold
+                            ${isPast && !isTodayDate
+                              ? `bg-linear-to-r ${colorSet.gradient} text-white opacity-40`
+                              : `bg-linear-to-r ${colorSet.gradient} text-white`
+                            }
+                          `}
+                        >
+                          <GraduationCap className="h-3 w-3 shrink-0" />
+                          <span className="truncate">{exam.title}</span>
+                        </div>
+                      );
+                    })}
+                    {day.sessions.slice(0, 2).map((session) => {
+                      const exam = (exams || []).find((e) => e.id === session.examId);
+                      const colorSet = getSubjectColor(exam?.subject, userSubjects);
+                      return (
+                        <div
+                          key={session.id}
+                          className={`flex items-center gap-1.5 py-1 px-2 rounded-lg text-[10px] font-medium ${
+                            isPast && !isTodayDate
+                              ? `${colorSet.pill} opacity-40`
+                              : colorSet.pill
+                          }`}
+                        >
+                          <BookOpen className="h-3 w-3 shrink-0" />
+                          <span className="truncate">{session.topic || session.method}</span>
+                        </div>
+                      );
+                    })}
                     {(day.exams.length > 2 || day.sessions.length > 2) && (
                       <span className="text-[9px] text-muted-foreground pl-2">
                         +{Math.max(0, day.exams.length - 2) + Math.max(0, day.sessions.length - 2)} more

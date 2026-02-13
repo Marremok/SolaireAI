@@ -36,8 +36,10 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useCreateExam, useUpdateExam } from "@/hooks/use-exams";
+import { useUserSettings } from "@/hooks/use-settings";
 import type { ExamWithStatus } from "@/lib/actions/exam";
 import { WHEN_TO_START_OPTIONS } from "@/lib/constants";
+import { SUBJECT_COLORS, type SubjectConfig } from "@/lib/colors";
 
 // Available study methods
 const STUDY_METHODS = [
@@ -66,7 +68,7 @@ const WHEN_TO_START_LABELS: Record<string, string> = {
 // Form validation schema
 const examSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
-  subject: z.string().max(100, "Subject is too long").optional(),
+  subject: z.string().min(1, "Subject is required"),
   preferences: z.string().max(500, "Description is too long").optional(),
   date: z.date(),
   whenToStartStudying: z.string().refine(
@@ -101,6 +103,8 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
   const [calendarOpen, setCalendarOpen] = useState(false);
   const createExam = useCreateExam();
   const updateExamMutation = useUpdateExam();
+  const { data: userSettings } = useUserSettings();
+  const userSubjects: SubjectConfig[] = userSettings?.subjects ?? [];
 
   const isEditMode = !!exam;
   const open = controlledOpen ?? internalOpen;
@@ -166,7 +170,7 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
           examId: exam.id,
           input: {
             title: data.title,
-            subject: data.subject || undefined,
+            subject: data.subject,
             preferences: data.preferences || undefined,
             date: data.date,
             whenToStartStudying: data.whenToStartStudying,
@@ -182,7 +186,7 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
       } else {
         await createExam.mutateAsync({
           title: data.title,
-          subject: data.subject || undefined,
+          subject: data.subject,
           preferences: data.preferences || undefined,
           date: data.date,
           whenToStartStudying: data.whenToStartStudying,
@@ -253,12 +257,41 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
 
             {/* Subject */}
             <div className="grid gap-2">
-              <Label htmlFor="subject">Subject</Label>
-              <Input
-                id="subject"
-                placeholder="e.g., Mathematics"
-                {...register("subject")}
-              />
+              <Label htmlFor="subject">
+                Subject <span className="text-destructive">*</span>
+              </Label>
+              <Select
+                value={watch("subject") || ""}
+                onValueChange={(val) => setValue("subject", val, { shouldDirty: true })}
+              >
+                <SelectTrigger id="subject">
+                  {watch("subject") ? (
+                    <div className="flex items-center gap-2">
+                      {(() => {
+                        const match = userSubjects.find((s) => s.name === watch("subject"));
+                        const swatch = match ? SUBJECT_COLORS[match.color]?.swatch : null;
+                        return swatch ? <div className={`h-3 w-3 rounded-full ${swatch}`} /> : null;
+                      })()}
+                      <SelectValue placeholder="Select subject" />
+                    </div>
+                  ) : (
+                    <SelectValue placeholder="Select subject" />
+                  )}
+                </SelectTrigger>
+                <SelectContent>
+                  {userSubjects.map((s) => (
+                    <SelectItem key={s.name} value={s.name}>
+                      <div className="flex items-center gap-2">
+                        <div className={`h-3 w-3 rounded-full ${SUBJECT_COLORS[s.color]?.swatch ?? "bg-gray-500"}`} />
+                        {s.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.subject && (
+                <p className="text-xs text-destructive">{errors.subject.message}</p>
+              )}
             </div>
 
             {/* Date */}

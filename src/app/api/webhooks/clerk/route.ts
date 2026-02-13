@@ -1,6 +1,7 @@
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
+import { DEFAULT_SUBJECTS } from "@/lib/colors";
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
           email: email_addresses[0].email_address,
           firstName: first_name ?? "",
           lastName: last_name ?? "",
+          subjects: JSON.parse(JSON.stringify(DEFAULT_SUBJECTS)),
         },
       });
     }

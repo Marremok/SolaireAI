@@ -66,6 +66,7 @@ export type UserCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   restDays: number
+  subjects: number
   _all: number
 }
 
@@ -110,6 +111,7 @@ export type UserCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   restDays?: true
+  subjects?: true
   _all?: true
 }
 
@@ -209,6 +211,7 @@ export type UserGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   restDays: string[]
+  subjects: runtime.JsonValue
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -244,6 +247,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   restDays?: Prisma.StringNullableListFilter<"User">
+  subjects?: Prisma.JsonFilter<"User">
   exams?: Prisma.ExamListRelationFilter
   studySessions?: Prisma.StudySessionListRelationFilter
 }
@@ -258,6 +262,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   restDays?: Prisma.SortOrder
+  subjects?: Prisma.SortOrder
   exams?: Prisma.ExamOrderByRelationAggregateInput
   studySessions?: Prisma.StudySessionOrderByRelationAggregateInput
 }
@@ -275,6 +280,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   restDays?: Prisma.StringNullableListFilter<"User">
+  subjects?: Prisma.JsonFilter<"User">
   exams?: Prisma.ExamListRelationFilter
   studySessions?: Prisma.StudySessionListRelationFilter
 }, "id" | "clerkId" | "email">
@@ -289,6 +295,7 @@ export type UserOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   restDays?: Prisma.SortOrder
+  subjects?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -309,6 +316,7 @@ export type UserScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   restDays?: Prisma.StringNullableListFilter<"User">
+  subjects?: Prisma.JsonWithAggregatesFilter<"User">
 }
 
 export type UserCreateInput = {
@@ -320,6 +328,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   restDays?: Prisma.UserCreaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   exams?: Prisma.ExamCreateNestedManyWithoutUserInput
   studySessions?: Prisma.StudySessionCreateNestedManyWithoutUserInput
 }
@@ -334,6 +343,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   restDays?: Prisma.UserCreaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   exams?: Prisma.ExamUncheckedCreateNestedManyWithoutUserInput
   studySessions?: Prisma.StudySessionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -347,6 +357,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   exams?: Prisma.ExamUpdateManyWithoutUserNestedInput
   studySessions?: Prisma.StudySessionUpdateManyWithoutUserNestedInput
 }
@@ -361,6 +372,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   exams?: Prisma.ExamUncheckedUpdateManyWithoutUserNestedInput
   studySessions?: Prisma.StudySessionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -375,6 +387,7 @@ export type UserCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   restDays?: Prisma.UserCreaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserUpdateManyMutationInput = {
@@ -386,6 +399,7 @@ export type UserUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -398,6 +412,7 @@ export type UserUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type StringNullableListFilter<$PrismaModel = never> = {
@@ -418,6 +433,7 @@ export type UserCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   restDays?: Prisma.SortOrder
+  subjects?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -521,6 +537,7 @@ export type UserCreateWithoutExamsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   restDays?: Prisma.UserCreaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   studySessions?: Prisma.StudySessionCreateNestedManyWithoutUserInput
 }
 
@@ -534,6 +551,7 @@ export type UserUncheckedCreateWithoutExamsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   restDays?: Prisma.UserCreaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   studySessions?: Prisma.StudySessionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -562,6 +580,7 @@ export type UserUpdateWithoutExamsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   studySessions?: Prisma.StudySessionUpdateManyWithoutUserNestedInput
 }
 
@@ -575,6 +594,7 @@ export type UserUncheckedUpdateWithoutExamsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   studySessions?: Prisma.StudySessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -587,6 +607,7 @@ export type UserCreateWithoutStudySessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   restDays?: Prisma.UserCreaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   exams?: Prisma.ExamCreateNestedManyWithoutUserInput
 }
 
@@ -600,6 +621,7 @@ export type UserUncheckedCreateWithoutStudySessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   restDays?: Prisma.UserCreaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   exams?: Prisma.ExamUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -628,6 +650,7 @@ export type UserUpdateWithoutStudySessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   exams?: Prisma.ExamUpdateManyWithoutUserNestedInput
 }
 
@@ -641,6 +664,7 @@ export type UserUncheckedUpdateWithoutStudySessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restDays?: Prisma.UserUpdaterestDaysInput | string[]
+  subjects?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   exams?: Prisma.ExamUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -694,6 +718,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   restDays?: boolean
+  subjects?: boolean
   exams?: boolean | Prisma.User$examsArgs<ExtArgs>
   studySessions?: boolean | Prisma.User$studySessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -709,6 +734,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   restDays?: boolean
+  subjects?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -721,6 +747,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   restDays?: boolean
+  subjects?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -733,9 +760,10 @@ export type UserSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   restDays?: boolean
+  subjects?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkId" | "email" | "firstName" | "lastName" | "phone" | "createdAt" | "updatedAt" | "restDays", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkId" | "email" | "firstName" | "lastName" | "phone" | "createdAt" | "updatedAt" | "restDays" | "subjects", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   exams?: boolean | Prisma.User$examsArgs<ExtArgs>
   studySessions?: boolean | Prisma.User$studySessionsArgs<ExtArgs>
@@ -760,6 +788,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     updatedAt: Date
     restDays: string[]
+    subjects: runtime.JsonValue
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1194,6 +1223,7 @@ export interface UserFieldRefs {
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly restDays: Prisma.FieldRef<"User", 'String[]'>
+  readonly subjects: Prisma.FieldRef<"User", 'Json'>
 }
     
 

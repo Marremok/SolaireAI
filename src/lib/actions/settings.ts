@@ -6,6 +6,7 @@ import {
   userSettingsSchema,
   type UserSettingsInput,
 } from "../schemas/settings";
+import { DEFAULT_SUBJECTS, type SubjectConfig } from "@/lib/colors";
 
 /**
  * Get current user settings
@@ -18,11 +19,21 @@ export async function getUserSettings(): Promise<UserSettingsInput | null> {
     where: { id: dbUser.id },
     select: {
       restDays: true,
+      subjects: true,
     },
   });
 
-  // Type assertion: Prisma returns string[] but we know it contains valid enum values
-  return settings as UserSettingsInput;
+  if (!settings) return null;
+
+  // If subjects is empty or not set, return default subjects
+  const subjects = Array.isArray(settings.subjects) && settings.subjects.length > 0
+    ? (settings.subjects as unknown as SubjectConfig[])
+    : DEFAULT_SUBJECTS;
+
+  return {
+    restDays: settings.restDays as UserSettingsInput["restDays"],
+    subjects,
+  };
 }
 
 /**
@@ -42,12 +53,20 @@ export async function updateUserSettings(
     where: { id: dbUser.id },
     data: {
       restDays: validated.restDays,
+      subjects: JSON.parse(JSON.stringify(validated.subjects)),
     },
     select: {
       restDays: true,
+      subjects: true,
     },
   });
 
-  // Type assertion: Prisma returns string[] but we know it contains valid enum values
-  return updatedUser as UserSettingsInput;
+  const subjects = Array.isArray(updatedUser.subjects) && updatedUser.subjects.length > 0
+    ? (updatedUser.subjects as unknown as SubjectConfig[])
+    : DEFAULT_SUBJECTS;
+
+  return {
+    restDays: updatedUser.restDays as UserSettingsInput["restDays"],
+    subjects,
+  };
 }

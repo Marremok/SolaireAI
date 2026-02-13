@@ -11,10 +11,12 @@ export const DAY_OPTIONS = [
   "SUNDAY",
 ] as const;
 
-// REMOVED: SESSION_LENGTH_OPTIONS (moved to Exam level)
-// REMOVED: INTENSITY_OPTIONS (no longer needed - pure math instead)
+export const subjectSchema = z.object({
+  name: z.string().min(1).max(50),
+  color: z.string().min(1),
+});
 
-// Validation schema - only rest days (hours moved to per-exam)
+// Validation schema
 export const userSettingsSchema = z.object({
   restDays: z
     .array(z.enum(DAY_OPTIONS))
@@ -23,6 +25,7 @@ export const userSettingsSchema = z.object({
       (days) => days.length < 7,
       "Cannot mark all 7 days as rest days"
     ),
+  subjects: z.array(subjectSchema).default([]),
 });
 
 export type UserSettingsInput = z.infer<typeof userSettingsSchema>;

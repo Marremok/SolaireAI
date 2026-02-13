@@ -8,19 +8,8 @@ import { getToday, addDays, getDayNameShort, getDayNameFull, formatDateShort, is
 import { useExams } from "@/hooks/use-exams";
 import { useUserSettings } from "@/hooks/use-settings";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getSubjectColor, type SubjectConfig } from "@/lib/colors";
 import type { ExamWithStatus, StudySessionData } from "@/lib/actions/exam";
-
-// Color palette for exams
-const EXAM_COLORS = [
-  "from-blue-500 to-cyan-400 shadow-blue-500/25",
-  "from-violet-500 to-purple-400 shadow-violet-500/25",
-  "from-emerald-500 to-teal-400 shadow-emerald-500/25",
-  "from-orange-500 to-amber-400 shadow-orange-500/25",
-];
-
-function getExamColor(index: number): string {
-  return EXAM_COLORS[index % EXAM_COLORS.length];
-}
 
 interface DayData {
   day: string;
@@ -35,6 +24,7 @@ export default function ComingDays() {
   const { data: exams, isLoading } = useExams();
   const { data: settings } = useUserSettings();
   const userRestDays: string[] = settings?.restDays ?? [];
+  const userSubjects: SubjectConfig[] = settings?.subjects ?? [];
 
   // Generate dynamic days based on today's date with exams and sessions
   const days = useMemo<DayData[]>(() => {
@@ -158,40 +148,47 @@ export default function ComingDays() {
                 {/* === EXAM PILLS === */}
                 {hasExams && (
                   <div className="space-y-2">
-                    {day.exams.slice(0, 2).map((exam, examIndex) => (
-                      <div key={exam.id} className="relative group/pill">
-                        <div className={`absolute inset-0 blur-xl opacity-40 bg-linear-to-r ${getExamColor(examIndex)}`} />
-                        <div className={`
-                          relative flex flex-col items-center justify-center text-center py-3 px-2 rounded-2xl
-                          bg-linear-to-b ${getExamColor(examIndex)} text-white shadow-lg
-                        `}>
-                          <GraduationCap className="h-4 w-4 mb-1 drop-shadow-md" />
-                          <span className="text-[10px] font-bold leading-tight drop-shadow-sm truncate max-w-full px-1">
-                            {exam.title}
-                          </span>
+                    {day.exams.slice(0, 2).map((exam) => {
+                      const colorSet = getSubjectColor(exam.subject, userSubjects);
+                      return (
+                        <div key={exam.id} className="relative group/pill">
+                          <div className={`absolute inset-0 blur-xl opacity-40 bg-linear-to-r ${colorSet.gradient} ${colorSet.shadow}`} />
+                          <div className={`
+                            relative flex flex-col items-center justify-center text-center py-3 px-2 rounded-2xl
+                            bg-linear-to-b ${colorSet.gradient} text-white shadow-lg ${colorSet.shadow}
+                          `}>
+                            <GraduationCap className="h-4 w-4 mb-1 drop-shadow-md" />
+                            <span className="text-[10px] font-bold leading-tight drop-shadow-sm truncate max-w-full px-1">
+                              {exam.title}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
 
                 {/* === SESSION PILLS === */}
                 {hasSessions && (
                   <div className={`space-y-1.5 ${hasExams ? "mt-2" : ""}`}>
-                    {day.sessions.slice(0, 2).map((session) => (
-                      <div
-                        key={session.id}
-                        className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl bg-indigo-500/15 border border-indigo-500/25"
-                      >
-                        <BookOpen className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
-                        <span className="text-[10px] font-medium text-indigo-300 truncate">
-                          {session.topic || session.method}
-                        </span>
-                        <span className="text-[9px] text-indigo-400/60 ml-auto shrink-0">
-                          {session.duration}m
-                        </span>
-                      </div>
-                    ))}
+                    {day.sessions.slice(0, 2).map((session) => {
+                      const exam = (exams || []).find((e) => e.id === session.examId);
+                      const colorSet = getSubjectColor(exam?.subject, userSubjects);
+                      return (
+                        <div
+                          key={session.id}
+                          className={`flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl ${colorSet.pill}`}
+                        >
+                          <BookOpen className="h-3.5 w-3.5 shrink-0" />
+                          <span className="text-[10px] font-medium truncate">
+                            {session.topic || session.method}
+                          </span>
+                          <span className="text-[9px] opacity-60 ml-auto shrink-0">
+                            {session.duration}m
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
 

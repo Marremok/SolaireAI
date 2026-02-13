@@ -13,22 +13,12 @@ import {
 import Link from "next/link";
 
 import { useExams, filterUpcomingExams } from "@/hooks/use-exams";
+import { useUserSettings } from "@/hooks/use-settings";
 import { AddExamDialog } from "./AddExamDialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getSubjectColor, type SubjectConfig } from "@/lib/colors";
 import type { ExamWithStatus } from "@/lib/actions/exam";
-
-// Color palette for exam cards
-const EXAM_COLORS = [
-  "border-blue-500/20",
-  "border-violet-500/20",
-  "border-emerald-500/20",
-  "border-orange-500/20",
-];
-
-function getExamColor(index: number): string {
-  return EXAM_COLORS[index % EXAM_COLORS.length];
-}
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -167,6 +157,8 @@ function EmptyState() {
 
 export default function ExamManagement() {
   const { data: exams, isLoading } = useExams();
+  const { data: settings } = useUserSettings();
+  const userSubjects: SubjectConfig[] = settings?.subjects ?? [];
   const upcomingExams = filterUpcomingExams(exams);
   const [editingExam, setEditingExam] = useState<ExamWithStatus | null>(null);
 
@@ -217,11 +209,11 @@ export default function ExamManagement() {
             }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
           >
-            {displayExams.map((exam, index) => (
+            {displayExams.map((exam) => (
               <ExamCard
                 key={exam.id}
                 exam={exam}
-                colorClass={getExamColor(index)}
+                colorClass={getSubjectColor(exam.subject, userSubjects).border}
                 onEdit={() => setEditingExam(exam)}
               />
             ))}

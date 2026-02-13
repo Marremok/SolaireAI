@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 
 import { useExams, useDeleteExam, filterUpcomingExams, filterCompletedExams } from "@/hooks/use-exams";
+import { useUserSettings } from "@/hooks/use-settings";
 import { AddExamDialog } from "./AddExamDialog";
 import { ScheduleStatusBadge } from "./ScheduleStatusBadge";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { getSubjectColor, type SubjectConfig } from "@/lib/colors";
 import type { ExamWithStatus } from "@/lib/actions/exam";
 
 // Human-readable labels for whenToStartStudying
@@ -42,20 +44,6 @@ function getStartStudyingLabel(value: string): string {
     "4_weeks_before": "4 weeks before",
   };
   return labels[value] ?? value;
-}
-
-// Color palette for exam cards
-const EXAM_COLORS = [
-  "border-blue-500/20",
-  "border-violet-500/20",
-  "border-emerald-500/20",
-  "border-orange-500/20",
-  "border-rose-500/20",
-  "border-cyan-500/20",
-];
-
-function getExamColor(index: number): string {
-  return EXAM_COLORS[index % EXAM_COLORS.length];
 }
 
 const itemVariants: Variants = {
@@ -261,6 +249,8 @@ function EmptyState() {
 
 export function ExamsList() {
   const { data: exams, isLoading, error } = useExams();
+  const { data: settings } = useUserSettings();
+  const userSubjects: SubjectConfig[] = settings?.subjects ?? [];
   const deleteExam = useDeleteExam();
   const [editingExam, setEditingExam] = useState<ExamWithStatus | null>(null);
 
@@ -312,11 +302,11 @@ export function ExamsList() {
             }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
           >
-            {upcomingExams.map((exam, index) => (
+            {upcomingExams.map((exam) => (
               <ExamCard
                 key={exam.id}
                 exam={exam}
-                colorClass={getExamColor(index)}
+                colorClass={getSubjectColor(exam.subject, userSubjects).border}
                 onEdit={() => setEditingExam(exam)}
                 onDelete={() => deleteExam.mutate(exam.id)}
                 isDeleting={deleteExam.isPending}
@@ -344,11 +334,11 @@ export function ExamsList() {
             }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
           >
-            {completedExams.map((exam, index) => (
+            {completedExams.map((exam) => (
               <ExamCard
                 key={exam.id}
                 exam={exam}
-                colorClass={getExamColor(index)}
+                colorClass={getSubjectColor(exam.subject, userSubjects).border}
                 onEdit={() => setEditingExam(exam)}
                 onDelete={() => {
                   toast.promise(

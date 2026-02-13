@@ -55,11 +55,33 @@ export interface ExamWithStatus {
 }
 
 /**
+ * Clean up past data: delete sessions for past exams immediately,
+ * delete exams older than 7 days.
+ */
+async function cleanupPastData(userId: number) {
+  const now = new Date();
+  const sevenDaysAgo = new Date(now);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  await prisma.$transaction([
+    prisma.studySession.deleteMany({
+      where: { userId, exam: { date: { lt: now } } },
+    }),
+    prisma.exam.deleteMany({
+      where: { userId, date: { lt: sevenDaysAgo } },
+    }),
+  ]);
+}
+
+/**
  * Get all exams for the currently authenticated PRO user
  * PROTECTED: Requires active PRO subscription
  */
 export async function getExamsByUserId(): Promise<ExamWithStatus[]> {
   const dbUser = await requireProUser();
+
+  // Clean up stale data before fetching
+  await cleanupPastData(dbUser.id);
 
   const exams = await prisma.exam.findMany({
     where: { userId: dbUser.id },
@@ -67,8 +89,11 @@ export async function getExamsByUserId(): Promise<ExamWithStatus[]> {
     orderBy: { date: "asc" },
   });
 
+  const now = new Date();
+
   return exams.map((exam) => ({
     ...exam,
+    status: (new Date(exam.date) < now ? "COMPLETED" : "UPCOMING") as "UPCOMING" | "COMPLETED",
     studyMethods: exam.studyMethods as string[],
     studySessions: exam.studySessions.map((s) => ({
       id: s.id,

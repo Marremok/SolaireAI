@@ -6,26 +6,17 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { formatDateFull, getToday, getRelativeDateString, isSameDay } from "@/lib/date";
 import { useExams, filterUpcomingExams } from "@/hooks/use-exams";
+import { useUserSettings } from "@/hooks/use-settings";
 import { Skeleton } from "@/components/ui/skeleton";
-
-// Color palette for exams
-const EXAM_COLORS = [
-  "bg-blue-500",
-  "bg-violet-500",
-  "bg-emerald-500",
-  "bg-orange-500",
-  "bg-rose-500",
-];
-
-function getExamColor(index: number): string {
-  return EXAM_COLORS[index % EXAM_COLORS.length];
-}
+import { getSubjectColor, type SubjectConfig } from "@/lib/colors";
 
 export default function TodayBox() {
   const today = useMemo(() => getToday(), []);
   const formattedDate = useMemo(() => formatDateFull(today), [today]);
 
   const { data: exams, isLoading } = useExams();
+  const { data: settings } = useUserSettings();
+  const userSubjects: SubjectConfig[] = settings?.subjects ?? [];
 
   // Get today's study sessions
   const todaySessions = useMemo(() => {
@@ -44,12 +35,12 @@ export default function TodayBox() {
     return upcoming
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .slice(0, 3)
-      .map((exam, index) => ({
+      .map((exam) => ({
         ...exam,
         relativeDate: getRelativeDateString(new Date(exam.date)),
-        color: getExamColor(index),
+        color: getSubjectColor(exam.subject, userSubjects).solid,
       }));
-  }, [exams]);
+  }, [exams, userSubjects]);
 
   if (isLoading) {
     return (
