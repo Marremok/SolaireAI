@@ -274,18 +274,22 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
                 onValueChange={(val) => setValue("subject", val, { shouldDirty: true })}
               >
                 <SelectTrigger id="subject">
-                  {watch("subject") ? (
-                    <div className="flex items-center gap-2">
-                      {(() => {
-                        const match = userSubjects.find((s) => s.name === watch("subject"));
-                        const swatch = match ? SUBJECT_COLORS[match.color]?.swatch : null;
-                        return swatch ? <div className={`h-3 w-3 rounded-full ${swatch}`} /> : null;
-                      })()}
-                      <span className="truncate">{watch("subject")}</span>
-                    </div>
-                  ) : (
-                    <SelectValue placeholder="Select subject" />
-                  )}
+                  <div className="flex items-center gap-2 w-full overflow-hidden">
+                    {(() => {
+                      const currentSubject = watch("subject");
+                      if (!currentSubject) {
+                        return <span className="text-muted-foreground">Select subject</span>;
+                      }
+                      const match = userSubjects.find((s) => s.name === currentSubject);
+                      const swatch = match ? SUBJECT_COLORS[match.color]?.swatch : null;
+                      return (
+                        <>
+                          {swatch && <div className={`h-3 w-3 shrink-0 rounded-full ${swatch}`} />}
+                          <span className="truncate">{currentSubject}</span>
+                        </>
+                      );
+                    })()}
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
                   {userSubjects.map((s) => (

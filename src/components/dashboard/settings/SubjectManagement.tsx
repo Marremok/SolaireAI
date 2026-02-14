@@ -41,7 +41,7 @@ export function SubjectManagement({
   };
 
   return (
-    <Card className="p-6 overflow-hidden">
+    <Card className="p-6">
       <div className="space-y-6">
         <div>
           <h2 className="text-lg font-semibold tracking-tight">Subjects & Colors</h2>

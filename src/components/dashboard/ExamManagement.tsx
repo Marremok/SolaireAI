@@ -166,7 +166,7 @@ export default function ExamManagement() {
   const displayExams = upcomingExams.slice(0, 4);
 
   return (
-    <div className="w-full mt-12">
+    <div className="w-full my-12">
       {/* Edit Dialog */}
       {editingExam && (
         <AddExamDialog
