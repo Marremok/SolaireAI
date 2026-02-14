@@ -12,7 +12,7 @@ export const WHEN_TO_START_OPTIONS = [
 export type WhenToStartStudying = (typeof WHEN_TO_START_OPTIONS)[number];
 
 export const PRICING = {
-  MONTHLY_PRICE: "$3.49",
-  MONTHLY_PRICE_DISPLAY: "3.49",
+  MONTHLY_PRICE: "$3.79",
+  MONTHLY_PRICE_DISPLAY: "3.79",
   TRIAL_DAYS: 7,
 } as const;

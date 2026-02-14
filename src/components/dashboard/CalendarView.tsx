@@ -12,6 +12,7 @@ import {
   getNextMonth,
   isSameDay,
   getDayNameFull,
+  isPastDay,
 } from "@/lib/date";
 import { useExams } from "@/hooks/use-exams";
 import { useUserSettings } from "@/hooks/use-settings";
@@ -167,7 +168,7 @@ export default function CalendarView() {
       >
         {calendarDays.map((day, index) => {
           const isTodayDate = day.date && isToday(day.date);
-          const isPast = day.date && day.date < today;
+          const isPast = day.date && isPastDay(day.date);
           const hasContent = day.exams.length > 0 || day.sessions.length > 0;
 
           return (

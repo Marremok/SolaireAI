@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Sparkles, Calendar, BookOpen, Clock } from "lucide-react";
 import { useMemo } from "react";
 import { useExams, filterUpcomingExams } from "@/hooks/use-exams";
-import { getToday } from "@/lib/date";
+import { getToday, getDaysBetween } from "@/lib/date";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface WelcomeHeaderProps {
@@ -23,11 +23,10 @@ export default function WelcomeHeader({ firstName }: WelcomeHeaderProps) {
     let daysToNearest = "-";
     if (upcomingExams.length > 0) {
       const sortedByDate = [...upcomingExams].sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        (a, b) => getDaysBetween(a.date, b.date)
       );
       const nearestExam = sortedByDate[0];
-      const diffTime = new Date(nearestExam.date).getTime() - today.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffDays = getDaysBetween(today, nearestExam.date);
       daysToNearest = diffDays > 0 ? String(diffDays) : "Today";
     }
 

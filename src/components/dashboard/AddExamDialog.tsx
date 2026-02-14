@@ -4,7 +4,18 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { CalendarIcon, Plus, Loader2 } from "lucide-react";
+import {
+  CalendarIcon,
+  Plus,
+  Loader2,
+  PenLine,
+  BookOpenText,
+  FolderKanban,
+  FileText,
+  Repeat,
+  SearchCheck,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -42,15 +53,13 @@ import { WHEN_TO_START_OPTIONS } from "@/lib/constants";
 import { SUBJECT_COLORS, type SubjectConfig } from "@/lib/colors";
 
 // Available study methods
-const STUDY_METHODS = [
-  "Active Recall",
-  "Spaced Repetition",
-  "Feynman Technique",
-  "Mind Mapping",
-  "Practice Problems",
-  "Flashcards",
-  "Summarization",
-  "Teaching Others",
+const STUDY_METHODS: { label: string; icon: LucideIcon }[] = [
+  { label: "Practice Problems", icon: PenLine },
+  { label: "Read & Take Notes", icon: BookOpenText },
+  { label: "Continue Project", icon: FolderKanban },
+  { label: "Summarize Concepts", icon: FileText },
+  { label: "Repetition", icon: Repeat },
+  { label: "Review Mistakes", icon: SearchCheck },
 ];
 
 // Human-readable labels for whenToStartStudying options
@@ -272,7 +281,7 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
                         const swatch = match ? SUBJECT_COLORS[match.color]?.swatch : null;
                         return swatch ? <div className={`h-3 w-3 rounded-full ${swatch}`} /> : null;
                       })()}
-                      <SelectValue placeholder="Select subject" />
+                      <span className="truncate">{watch("subject")}</span>
                     </div>
                   ) : (
                     <SelectValue placeholder="Select subject" />
@@ -431,19 +440,20 @@ export function AddExamDialog({ trigger, exam, open: controlledOpen, onOpenChang
                 Study Methods <span className="text-destructive">*</span>
               </Label>
               <div className="flex flex-wrap gap-2">
-                {STUDY_METHODS.map((method) => (
+                {STUDY_METHODS.map(({ label, icon: Icon }) => (
                   <button
-                    key={method}
+                    key={label}
                     type="button"
-                    onClick={() => toggleMethod(method)}
+                    onClick={() => toggleMethod(label)}
                     className={cn(
-                      "px-3 py-1.5 text-xs font-medium rounded-full border transition-all",
-                      selectedMethods.includes(method)
+                      "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border transition-all",
+                      selectedMethods.includes(label)
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-transparent border-border/50 text-muted-foreground hover:border-primary/50 hover:text-foreground"
                     )}
                   >
-                    {method}
+                    <Icon className="h-3.5 w-3.5" />
+                    {label}
                   </button>
                 ))}
               </div>

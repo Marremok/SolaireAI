@@ -34,13 +34,13 @@ export default function ContactPage() {
             <div>
               <h2 className="text-lg font-semibold mb-1">Email Support</h2>
               <p className="text-sm text-muted-foreground mb-4">
-                Send us an email and we&apos;ll respond within 24 hours.
+                Send us an email and we&apos;ll respond as soon as we can!.
               </p>
               <a
-                href="mailto:support@solaireai.com"
+                href="mailto:ssolaireai@gmail.com"
                 className="inline-flex items-center gap-2 text-primary hover:underline font-medium"
               >
-                support@solaireai.com
+                ssolaireai@gmail.com
               </a>
             </div>
           </div>

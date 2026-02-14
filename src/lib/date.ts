@@ -116,19 +116,52 @@ export function isTomorrow(date: Date): boolean {
 }
 
 /**
+ * Normalize a date to the start of day (midnight) in local timezone
+ */
+export function normalizeToStartOfDay(date: Date | string): Date {
+  const d = typeof date === 'string' ? new Date(date) : new Date(date);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+/**
+ * Calculate the number of calendar days between two dates
+ * Positive if dateB is after dateA, negative if before
+ */
+export function getDaysBetween(dateA: Date | string, dateB: Date | string): number {
+  const a = normalizeToStartOfDay(dateA);
+  const b = normalizeToStartOfDay(dateB);
+  const diffMs = b.getTime() - a.getTime();
+  return Math.round(diffMs / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * Check if a date is in the future (after today)
+ */
+export function isFutureDay(date: Date | string): boolean {
+  return getDaysBetween(getToday(), date) > 0;
+}
+
+/**
+ * Check if a date is in the past (before today)
+ */
+export function isPastDay(date: Date | string): boolean {
+  return getDaysBetween(getToday(), date) < 0;
+}
+
+/**
  * Get relative date string (Today, Tomorrow, In X days)
  */
-export function getRelativeDateString(date: Date): string {
+export function getRelativeDateString(date: Date | string): string {
   const today = getToday();
-  const diffTime = date.getTime() - today.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const targetDate = normalizeToStartOfDay(date);
+  const diffDays = getDaysBetween(today, targetDate);
 
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Tomorrow';
   if (diffDays > 0 && diffDays <= 7) return `In ${diffDays} days`;
   if (diffDays < 0) return `${Math.abs(diffDays)} days ago`;
 
-  return formatDateShort(date);
+  return formatDateShort(targetDate);
 }
 
 /**

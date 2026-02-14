@@ -3,6 +3,7 @@
 import { requireProUser } from "@/lib/auth";
 import { prisma } from "../prisma";
 import { WHEN_TO_START_OPTIONS, type WhenToStartStudying } from "@/lib/constants";
+import { normalizeToStartOfDay, getToday } from "@/lib/date";
 
 export interface CreateExamInput {
   title: string;
@@ -59,13 +60,13 @@ export interface ExamWithStatus {
  * delete exams older than 7 days.
  */
 async function cleanupPastData(userId: number) {
-  const now = new Date();
-  const sevenDaysAgo = new Date(now);
+  const today = getToday();
+  const sevenDaysAgo = new Date(today);
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
   await prisma.$transaction([
     prisma.studySession.deleteMany({
-      where: { userId, exam: { date: { lt: now } } },
+      where: { userId, exam: { date: { lt: today } } },
     }),
     prisma.exam.deleteMany({
       where: { userId, date: { lt: sevenDaysAgo } },
@@ -89,11 +90,11 @@ export async function getExamsByUserId(): Promise<ExamWithStatus[]> {
     orderBy: { date: "asc" },
   });
 
-  const now = new Date();
+  const today = getToday();
 
   return exams.map((exam) => ({
     ...exam,
-    status: (new Date(exam.date) < now ? "COMPLETED" : "UPCOMING") as "UPCOMING" | "COMPLETED",
+    status: (normalizeToStartOfDay(exam.date) < today ? "COMPLETED" : "UPCOMING") as "UPCOMING" | "COMPLETED",
     studyMethods: exam.studyMethods as string[],
     studySessions: exam.studySessions.map((s) => ({
       id: s.id,
