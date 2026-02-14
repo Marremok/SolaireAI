@@ -10,6 +10,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { SUBJECT_COLORS, type SubjectConfig } from "@/lib/colors";
 
@@ -62,16 +63,7 @@ export function SubjectManagement({
                 onValueChange={(color) => onChangeColor(i, color)}
               >
                 <SelectTrigger className="w-37.5 h-9 bg-background/50 shadow-sm">
-                  <div className="flex items-center gap-2 w-full overflow-hidden">
-                    <div
-                      className={`h-3 w-3 shrink-0 rounded-full ring-1 ring-inset ring-black/10 ${
-                        SUBJECT_COLORS[subject.color]?.swatch ?? "bg-gray-500"
-                      }`}
-                    />
-                    <span className="truncate text-sm">
-                      {SUBJECT_COLORS[subject.color]?.label || subject.color}
-                    </span>
-                  </div>
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {colorKeys.map((key) => (
@@ -132,14 +124,7 @@ export function SubjectManagement({
               <div className="flex items-center gap-2">
                 <Select value={newSubjectColor} onValueChange={setNewSubjectColor}>
                   <SelectTrigger className="w-full sm:w-37.5 h-10">
-                    <div className="flex items-center gap-2 w-full overflow-hidden">
-                      <div
-                        className={`h-3 w-3 shrink-0 rounded-full ring-1 ring-inset ring-black/10 ${SUBJECT_COLORS[newSubjectColor]?.swatch}`}
-                      />
-                      <span className="truncate text-sm">
-                        {SUBJECT_COLORS[newSubjectColor]?.label}
-                      </span>
-                    </div>
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {colorKeys.map((key) => (
